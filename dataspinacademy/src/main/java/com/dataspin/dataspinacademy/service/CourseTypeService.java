@@ -2,7 +2,6 @@ package com.dataspin.dataspinacademy.service;
 import com.dataspin.dataspinacademy.dto.ResponseData;
 import com.dataspin.dataspinacademy.entity.CourseType;
 import com.dataspin.dataspinacademy.entity.ImageData;
-import com.dataspin.dataspinacademy.entity.Tag;
 import com.dataspin.dataspinacademy.entity.UserData;
 import com.dataspin.dataspinacademy.repository.CourseTypeRepository;
 import com.dataspin.dataspinacademy.repository.TagRepository;
