@@ -1,4 +1,5 @@
 package com.dataspin.dataspinacademy.service;
+
 import com.dataspin.dataspinacademy.dto.ResponseData;
 import com.dataspin.dataspinacademy.entity.CourseType;
 import com.dataspin.dataspinacademy.entity.ImageData;
@@ -17,7 +18,6 @@ import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.HashSet;
-import java.util.stream.Collectors;
 
 @Service
 @AllArgsConstructor
@@ -27,7 +27,7 @@ public class CourseTypeService {
     private final CourseTypeRepository courseTypeRepository;
     private final TagRepository tagRepository;
 
-    public ResponseEntity<ResponseData>  create(String name, String description,  String courseTags, MultipartFile photo, HttpServletRequest request) throws IOException {
+    public ResponseEntity<ResponseData> create(String name, String description, String courseTags, MultipartFile photo, HttpServletRequest request) throws IOException {
         UserData userData = jwtGenerator.getUserFromRequest(request);
         CourseType courseType = new CourseType();
         courseType.setName(name);
@@ -38,18 +38,21 @@ public class CourseTypeService {
         imageData.setUser(userData);
         courseType.setPhoto(imageData);
         courseType.setUser(userData);
-        courseType.setCourseTags(new HashSet<>(tagRepository.getByInIds(Arrays.stream(courseTags.split(",")).map(Long::parseLong).toList())));
+        if (!courseTags.isEmpty()) {
+            courseType.setCourseTags(new HashSet<>(tagRepository.getByInIds(Arrays.stream(courseTags.split(",")).map(Long::parseLong).toList())));
+        }
+
         courseTypeRepository.save(courseType);
         try {
             courseTypeRepository.save(courseType);
             return ResponseEntity.ok(new ResponseData(true, "Ma'lumotlar saqlandi", null));
         } catch (DataIntegrityViolationException e) {
-            return new ResponseEntity(new ResponseData(false, "Allaqachon mavjud", null), HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(new ResponseData(false, "Allaqachon mavjud", null), HttpStatus.BAD_REQUEST);
         }
 
     }
 
-    public ResponseEntity<ResponseData> getAll(){
+    public ResponseEntity<ResponseData> getAll() {
         return ResponseEntity.ok(new ResponseData(true, "Successful", courseTypeRepository.findAllInfo()));
     }
 }

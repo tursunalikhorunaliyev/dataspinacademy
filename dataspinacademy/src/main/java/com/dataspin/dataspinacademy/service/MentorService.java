@@ -14,6 +14,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.Arrays;
+import java.util.HashSet;
 
 @Service
 @AllArgsConstructor
@@ -36,8 +38,10 @@ public class MentorService {
         Mentor mentor = new Mentor();
         mentor.setEmployee(employee);
         mentor.setCourse(course);
+        if(!mentorDTO.getSubMentors().isEmpty()){
+            mentor.setSubMentors(new HashSet<>(employeeRepository.getByInIds(Arrays.stream(mentorDTO.getSubMentors().split(",")).map(Long::parseLong).toList())));
+        }
         mentor.setUser(userData);
-
         try {
             mentorRepository.save(mentor);
             return ResponseEntity.ok(new ResponseData(true, "Ma'lumotlar saqlandi", null));

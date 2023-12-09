@@ -6,6 +6,7 @@ import org.hibernate.annotations.CreationTimestamp;
 
 import javax.persistence.*;
 import java.sql.Timestamp;
+import java.util.Set;
 
 @Getter
 @Setter
@@ -24,6 +25,10 @@ public class Mentor {
     @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JoinColumn(name = "course", referencedColumnName = "id", nullable = false)
     private Course course;
+
+    @ManyToMany
+    @JoinTable(name = "sub_mentors", joinColumns = @JoinColumn(name = "mentor_id", referencedColumnName = "id"), inverseJoinColumns = @JoinColumn(name = "employee_id", referencedColumnName = "id"))
+    private Set<Employee> subMentors;
 
     @CreationTimestamp
     private Timestamp date;

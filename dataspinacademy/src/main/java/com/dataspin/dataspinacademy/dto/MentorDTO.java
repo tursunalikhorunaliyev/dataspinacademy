@@ -17,4 +17,6 @@ public class MentorDTO {
     private Long employeeID;
     @NotBlank(message = "Kurs kiritilmadi")
     private Long courseID;
+
+    private String subMentors;
 }
