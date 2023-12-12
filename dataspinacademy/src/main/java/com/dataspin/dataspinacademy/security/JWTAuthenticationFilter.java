@@ -50,6 +50,7 @@ public class JWTAuthenticationFilter extends OncePerRequestFilter {
     protected boolean shouldNotFilter(HttpServletRequest request) throws ServletException {
         return new AntPathMatcher().match("/api/auth/**", request.getServletPath())
                 || new AntPathMatcher().match("/netflex/**", request.getServletPath())
+                || new AntPathMatcher().match("/actuator/**", request.getServletPath())
                 || new AntPathMatcher().match("/api/image/**", request.getServletPath())
                 || new AntPathMatcher().match("/resources/**", request.getServletPath())
                 || new AntPathMatcher().match("/index.html", request.getServletPath())

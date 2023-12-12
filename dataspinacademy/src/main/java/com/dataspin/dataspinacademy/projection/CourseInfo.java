@@ -6,6 +6,8 @@ package com.dataspin.dataspinacademy.projection;
 public interface CourseInfo {
     Long getId();
 
+    String getName();
+
     CourseForInfo getCourseFor();
 
     CourseTypeInfo getCourseType();

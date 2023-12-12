@@ -21,7 +21,7 @@ public class Stuff {
     private String name;
 
     @ManyToOne
-    @JoinColumn(name = "user", referencedColumnName = "id", unique = true)
+    @JoinColumn(name = "user", referencedColumnName = "id", nullable = false)
     private UserData userData;
 
     @CreationTimestamp

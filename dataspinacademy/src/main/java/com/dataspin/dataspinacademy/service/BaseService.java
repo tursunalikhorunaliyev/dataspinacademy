@@ -106,4 +106,7 @@ public class BaseService {
     public ResponseEntity<ResponseData> getAllTags() {
         return ResponseEntity.ok(new ResponseData(true, "Barcha taglar", tagRepository.findAllTags()));
     }
+    public ResponseEntity<ResponseData> getAllStuff(){
+        return ResponseEntity.ok(new ResponseData(true, "Barcha lavozimlar",stuffRepository.findAllStuff()));
+    }
 }

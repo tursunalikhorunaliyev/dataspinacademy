@@ -29,9 +29,10 @@ public class CourseService {
     private final JWTGenerator jwtGenerator;
 
 
-    public ResponseEntity<ResponseData> create(Long forId, Long typeId, MultipartFile photo, HttpServletRequest request) throws IOException {
+    public ResponseEntity<ResponseData> create(String name, Long forId, Long typeId, MultipartFile photo, HttpServletRequest request) throws IOException {
         UserData userData = jwtGenerator.getUserFromRequest(request);
         Course course = new Course();
+        course.setName(name);
         course.setCourseFor(courseForRepository.findById(forId).get());
         course.setCourseType(courseTypeRepository.findById(typeId).get());
         course.setUser(userData);
@@ -52,4 +53,5 @@ public class CourseService {
     public ResponseEntity<ResponseData> getAll(){
         return ResponseEntity.ok(new ResponseData(true, "Barcha kurslar", courseRepository.findAllCourses()));
     }
+
 }

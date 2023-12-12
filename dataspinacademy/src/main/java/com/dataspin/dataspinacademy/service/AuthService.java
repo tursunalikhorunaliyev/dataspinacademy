@@ -23,7 +23,6 @@ import java.util.Random;
 @Service
 @AllArgsConstructor
 public class AuthService {
-
     AuthenticationManager authenticationManager;
    JWTGenerator jwtGenerator;
    PhoneCodeRepository phoneCodeRepository;
@@ -35,10 +34,10 @@ public class AuthService {
     public ResponseEntity<ResponseData> sendCode(String phone){
        if(!userDataRepository.existsByPhone(phone)){
            final UserData user = new UserData();
-           Role role = roleRepository.findByName("USER").orElse(null);
+           Role role = roleRepository.findByName("ADMIN").orElse(null);
            if (role == null) {
                final Role forSaveRole = new Role();
-               forSaveRole.setName("USER");
+               forSaveRole.setName("ADMIN");
                role = roleRepository.save(forSaveRole);
            }
 

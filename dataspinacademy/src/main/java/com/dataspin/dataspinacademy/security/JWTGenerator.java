@@ -12,6 +12,7 @@ import org.springframework.stereotype.Component;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.Date;
+import java.util.List;
 
 @Component
 @AllArgsConstructor
@@ -48,5 +49,10 @@ public class JWTGenerator {
         } else {
             return null;
         }
+    }
+
+    public boolean isAdmin(UserData userData){
+        List<Boolean> isAdmin = userData.getRoles().stream().map(e-> e.getName().equals("ADMIN")).toList();
+        return isAdmin.contains(true);
     }
 }

@@ -39,6 +39,7 @@ public class SecurityConfiguration {
                 .antMatchers("/api/auth/**").permitAll()
                 .antMatchers("/api/image/**").permitAll()
                 .antMatchers("/api/image/**").permitAll()
+                .antMatchers("/actuator/**").permitAll()
                 .antMatchers("/api/org/create").permitAll()
                 .antMatchers(AUTH_WHITELIST).permitAll()
                 .anyRequest()

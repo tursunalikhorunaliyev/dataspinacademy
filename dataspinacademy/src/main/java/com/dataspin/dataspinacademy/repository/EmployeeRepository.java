@@ -4,6 +4,7 @@ import com.dataspin.dataspinacademy.entity.Employee;
 import com.dataspin.dataspinacademy.entity.Tag;
 import com.dataspin.dataspinacademy.projection.CourseTypeInfo;
 import com.dataspin.dataspinacademy.projection.EmployeeInfo;
+import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.query.Param;
@@ -13,7 +14,7 @@ import java.util.List;
 import java.util.Set;
 
 @Repository
-public interface EmployeeRepository extends CrudRepository<Employee, Long> {
+public interface EmployeeRepository extends JpaRepository<Employee, Long> {
     @Query("SELECT e FROM Employee e")
     List<EmployeeInfo> findAllInfo();
 

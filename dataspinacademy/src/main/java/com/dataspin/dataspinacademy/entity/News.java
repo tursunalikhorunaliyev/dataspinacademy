@@ -10,26 +10,24 @@ import java.sql.Timestamp;
 @Getter
 @Setter
 @Entity
-@Table(name = "course", uniqueConstraints = @UniqueConstraint(columnNames = {"name","course_for", "course_type"}))
-public class Course {
+@Table(name = "news")
+public class News {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
     private Long id;
-
-    @Column(unique = true, nullable = false)
+    @Column(nullable = false)
     private String name;
 
-    @ManyToOne
-    @JoinColumn(name = "course_for", referencedColumnName = "id")
-    private CourseFor courseFor;
-    @ManyToOne
-    @JoinColumn(name = "course_type", referencedColumnName = "id")
-    private CourseType courseType;
+    @Column(nullable = false)
+    private String shortDesc;
+
+    @Column(nullable = false)
+    private String fullDesc;
 
     @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JoinColumn(name = "image", referencedColumnName = "id", nullable = false, unique = true)
-    private ImageData previewPhoto;
+    private ImageData photo;
 
     @CreationTimestamp
     private Timestamp date;
@@ -37,4 +35,5 @@ public class Course {
     @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", referencedColumnName = "id", nullable = false)
     private UserData user;
+
 }

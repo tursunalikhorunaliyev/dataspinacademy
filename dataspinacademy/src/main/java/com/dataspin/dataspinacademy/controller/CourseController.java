@@ -23,7 +23,7 @@ public class CourseController {
         return courseService.getAll();
     }
     @PostMapping("/new")
-    public ResponseEntity<ResponseData> create(@RequestParam("forId") Long forid, @RequestParam("typeId") Long typeId, @RequestParam("preview")MultipartFile preview, HttpServletRequest request) throws IOException {
-      return courseService.create(forid, typeId, preview, request);
+    public ResponseEntity<ResponseData> create(@RequestParam("name") String name, @RequestParam("forId") Long forid, @RequestParam("typeId") Long typeId, @RequestParam("preview") MultipartFile preview, HttpServletRequest request) throws IOException {
+      return courseService.create(name, forid, typeId, preview, request);
     }
 }
