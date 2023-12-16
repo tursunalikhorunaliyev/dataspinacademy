@@ -14,4 +14,8 @@ public interface CoursePriceRepository extends JpaRepository<CoursePrice, Long> 
     List<CoursePriceInfo> findAllCourses();
 
     List<CoursePriceInfo> findByCourse_Id(Long id);
+
+    @Query(nativeQuery = true, value = "select A2.* from(select max(start_date) as start_date, course_id from course_price group by course_id) as A1 \n" +
+            "inner join course_price as A2 on A1.start_date = A2.start_date;")
+    List<CoursePrice> getLastPrices();
 }

@@ -27,14 +27,15 @@ public class NewsService {
             return new ResponseEntity<>(new ResponseData(false, "Ushbu resursga murojaat qilish huquqingiz yo'q", null), HttpStatus.BAD_REQUEST);
         }
         News news = new News();
-        news.setName(news.getName());
-        news.setShortDesc(news.getShortDesc());
-        news.setFullDesc(news.getFullDesc());
+        news.setName(newsDTO.getName());
+        news.setShortDesc(newsDTO.getShortDesc());
+        news.setFullDesc(newsDTO.getFullDesc());
         ImageData imageData = new ImageData();
         imageData.setFilename(newsDTO.getPhoto().getOriginalFilename());
         imageData.setContent(newsDTO.getPhoto().getBytes());
         imageData.setUser(userData);
         news.setPhoto(imageData);
+        news.setUser(userData);
         newsRepository.save(news);
         return ResponseEntity.ok(new ResponseData(true,"Ma'lumotlar saqlandi", null));
     }

@@ -32,12 +32,34 @@ public class AuthService {
     private final UserInfoRepository userInfoRepository;
 
     public ResponseEntity<ResponseData> sendCode(String phone){
+      return   createUser(phone, "USER");
+   }
+
+   public ResponseEntity<ResponseData> checkCode(String phone, String code){
+
+       if(phoneCodeRepository.existsByPhoneAndCode(phone, code)){
+           final Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(phone, phone));
+           SecurityContextHolder.getContext().setAuthentication(authentication);
+           final String token = jwtGenerator.generateToken(authentication);
+           UserData userData = userDataRepository.findByPhone(jwtGenerator.getUsernameFromToken(token)).orElse(null);
+           boolean existsUserInfo = userInfoRepository.existsByUserData(userData);
+           return new ResponseEntity<>(new ResponseData(true, existsUserInfo?"Active":"Inactive", new TokenData("Foydalanuvchi tizimga kirdi", token)), HttpStatus.OK);
+       }else{
+           return new ResponseEntity<>(new ResponseData(false, "Kod xato kiritildi", null), HttpStatus.BAD_REQUEST);
+       }
+
+   }
+   public ResponseEntity<ResponseData> createAdmin(String phone){
+        return createUser(phone, "ADMIN");
+   }
+
+   public ResponseEntity<ResponseData> createUser(String phone, String roleName){
        if(!userDataRepository.existsByPhone(phone)){
            final UserData user = new UserData();
-           Role role = roleRepository.findByName("ADMIN").orElse(null);
+           Role role = roleRepository.findByName(roleName).orElse(null);
            if (role == null) {
                final Role forSaveRole = new Role();
-               forSaveRole.setName("ADMIN");
+               forSaveRole.setName(roleName);
                role = roleRepository.save(forSaveRole);
            }
 
@@ -57,20 +79,5 @@ public class AuthService {
 
        phoneCodeRepository.save(phoneCode);
        return ResponseEntity.ok(new ResponseData(true, "Sms jo'natildi", String.valueOf(randomInt)));
-   }
-
-   public ResponseEntity<ResponseData> checkCode(String phone, String code){
-
-       if(phoneCodeRepository.existsByPhoneAndCode(phone, code)){
-           final Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(phone, phone));
-           SecurityContextHolder.getContext().setAuthentication(authentication);
-           final String token = jwtGenerator.generateToken(authentication);
-           UserData userData = userDataRepository.findByPhone(jwtGenerator.getUsernameFromToken(token)).orElse(null);
-           boolean existsUserInfo = userInfoRepository.existsByUserData(userData);
-           return new ResponseEntity<>(new ResponseData(true, existsUserInfo?"Active":"Inactive", new TokenData("Foydalanuvchi tizimga kirdi", token)), HttpStatus.OK);
-       }else{
-           return new ResponseEntity<>(new ResponseData(false, "Kod xato kiritildi", null), HttpStatus.BAD_REQUEST);
-       }
-
    }
 }

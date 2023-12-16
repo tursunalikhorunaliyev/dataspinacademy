@@ -27,7 +27,7 @@ public class CoursePriceController {
     }
 
     @GetMapping("/by-course")
-    public ResponseEntity<ResponseData> getByCourse(@RequestParam Long courseId){
-        return coursePriceService.getAllByCourse(courseId);
+    public ResponseEntity<ResponseData> getByCourse(@RequestParam Long id){
+        return coursePriceService.getAllByCourse(id);
     }
 }

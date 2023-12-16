@@ -20,6 +20,11 @@ public class AuthController {
        return authService.sendCode(phone);
     }
 
+    @PostMapping("/send-code/admin-send")
+    public ResponseEntity<ResponseData> sendCodeAdmin(@RequestParam("phone") String phone){
+        return authService.createAdmin(phone);
+    }
+
     @PostMapping("/check-code")
     public  ResponseEntity<ResponseData> checkCode(@RequestParam("phone") String phone,@RequestParam("code") String code){
         return  authService.checkCode(phone, code);

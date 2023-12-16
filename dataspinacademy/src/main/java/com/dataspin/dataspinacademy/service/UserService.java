@@ -54,6 +54,6 @@ public class UserService {
                 return new ResponseEntity<>(new ResponseData(false, "Siz oldin ro'yxatdan o'tgansiz!", null), HttpStatus.BAD_REQUEST);
             }
         }
-        return ResponseEntity.ok(new ResponseData(true, "User ma'lumotlari yaratildi", userInfo));
+        return ResponseEntity.ok(new ResponseData(true, "User ma'lumotlari yaratildi", null));
     }
 }

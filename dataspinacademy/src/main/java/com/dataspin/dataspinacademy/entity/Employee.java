@@ -31,6 +31,8 @@ public class Employee {
 
     private Boolean isVerified;
 
+    private String about;
+
     @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JoinColumn(name = "image", referencedColumnName = "id", nullable = false, unique = true)
     private ImageData photo;

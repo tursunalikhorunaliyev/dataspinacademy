@@ -10,7 +10,7 @@ import java.time.LocalDateTime;
 public interface CoursePriceInfo {
     Long getId();
 
-    BigDecimal getPrice();
+    Integer getPrice();
 
     LocalDateTime getStartDate();
 

@@ -7,6 +7,7 @@ import lombok.Setter;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 
 @Data
 @Getter
@@ -19,7 +20,6 @@ public class NewsDTO {
     private String shortDesc;
     @NotEmpty(message = "fullDesc null bo'lishi mumkin emas")
     private String fullDesc;
-    @NotEmpty(message = "photo null bo'lishi mumkin emas")
+    @NotNull(message = "photo null bo'lishi mumkin emas")
     private MultipartFile photo;
-
 }

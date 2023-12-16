@@ -14,8 +14,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.Arrays;
-import java.util.HashSet;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 @AllArgsConstructor
@@ -29,15 +29,23 @@ public class MentorService {
     public ResponseEntity<ResponseData> create(MentorDTO mentorDTO, HttpServletRequest request){
         UserData userData = jwtGenerator.getUserFromRequest(request);
         Employee employee = employeeRepository.findById(mentorDTO.getEmployeeID()).get();
-        Course course = courseRepository.findById(mentorDTO.getCourseID()).get();
+
 
         if(!employee.getStuff().getName().equals("O'qituvchi")){
             return new ResponseEntity<>(new ResponseData(false, "Bu hodim o'qituvchi lavozimida emas.", null), HttpStatus.BAD_REQUEST);
         }
 
         Mentor mentor = new Mentor();
+        if(mentorDTO.getCourseIDs().length()==1){
+            Course course = courseRepository.findById(Long.parseLong(mentorDTO.getCourseIDs())).get();
+            mentor.setCourses(Collections.singleton(course));
+        }
+        else{
+            List<Long> courseIDs = Arrays.stream(mentorDTO.getCourseIDs().split(",")).map(Long::parseLong).collect(Collectors.toList());
+            Set<Course> courses  = courseRepository.getByInIds(courseIDs);
+            mentor.setCourses(courses);
+        }
         mentor.setEmployee(employee);
-        mentor.setCourse(course);
         if(!mentorDTO.getSubMentors().isEmpty()){
             mentor.setSubMentors(new HashSet<>(employeeRepository.getByInIds(Arrays.stream(mentorDTO.getSubMentors().split(",")).map(Long::parseLong).toList())));
         }

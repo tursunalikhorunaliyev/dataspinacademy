@@ -11,7 +11,7 @@ import java.util.Set;
 @Getter
 @Setter
 @Entity
-@Table(name = "mentor", uniqueConstraints = @UniqueConstraint(columnNames = {"employee","course"}))
+@Table(name = "mentor")
 public class Mentor {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -22,9 +22,9 @@ public class Mentor {
     @JoinColumn(name = "employee", referencedColumnName = "id", nullable = false)
     private Employee employee;
 
-    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    @JoinColumn(name = "course", referencedColumnName = "id", nullable = false)
-    private Course course;
+    @ManyToMany
+    @JoinTable(name = "mentor_courses", joinColumns = @JoinColumn(name = "mentor_id", referencedColumnName = "id"), inverseJoinColumns = @JoinColumn(name = "course_id", referencedColumnName = "id"))
+    private Set<Course> courses;
 
     @ManyToMany
     @JoinTable(name = "sub_mentors", joinColumns = @JoinColumn(name = "mentor_id", referencedColumnName = "id"), inverseJoinColumns = @JoinColumn(name = "employee_id", referencedColumnName = "id"))
