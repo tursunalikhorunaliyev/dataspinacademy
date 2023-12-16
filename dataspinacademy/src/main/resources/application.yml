@@ -1,0 +1,22 @@
+spring:
+  mvc:
+    view:
+      suffix: html
+    path match:
+      matching-strategy: ant_path_matcher
+  datasource:
+    url: jdbc:mysql://localhost:3306/dataspin224422232423
+    username: dataspinacademy
+    password: allohakbar13281328
+
+
+  jpa:
+    database-platform: org.hibernate.dialect.MySQL8Dialect
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+
+  servlet:
+    multipart:
+      max-file-size:
+        20MB
