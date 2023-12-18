@@ -1,14 +1,10 @@
 package com.dataspin.dataspinacademy.service;
-
 import com.dataspin.dataspinacademy.dto.ReceptionDTO;
-import com.dataspin.dataspinacademy.dto.ReceptionResult;
 import com.dataspin.dataspinacademy.dto.ResponseData;
-import com.dataspin.dataspinacademy.entity.Course;
-import com.dataspin.dataspinacademy.entity.Reception;
-import com.dataspin.dataspinacademy.entity.UserData;
-import com.dataspin.dataspinacademy.entity.UserInfo;
+import com.dataspin.dataspinacademy.entity.*;
 import com.dataspin.dataspinacademy.projection.ReceptionInfo;
 import com.dataspin.dataspinacademy.repository.CourseRepository;
+import com.dataspin.dataspinacademy.repository.ReceptionCounterRepository;
 import com.dataspin.dataspinacademy.repository.ReceptionRepository;
 import com.dataspin.dataspinacademy.repository.UserInfoRepository;
 import com.dataspin.dataspinacademy.security.JWTGenerator;
@@ -28,6 +24,7 @@ public class ReceptionService {
     private final ReceptionRepository receptionRepository;
     private final CourseRepository courseRepository;
     private final UserInfoRepository userInfoRepository;
+    private final ReceptionCounterRepository receptionCounterRepository;
 
     public ResponseEntity<ResponseData> create(ReceptionDTO receptionDTO, HttpServletRequest request){
         UserData userData = jwtGenerator.getUserFromRequest(request);
@@ -42,7 +39,11 @@ public class ReceptionService {
         reception.setCoursePhoto(course.getPreviewPhoto());
         reception.setUserInfo(userInfo);
         reception.setUser(userData);
+
         receptionRepository.save(reception);
+        ReceptionCounter receptionCounter = receptionCounterRepository.findByCourse_Id(receptionDTO.getCourseID());
+        receptionCounter.setActiveCount(receptionCounter.getActiveCount()+1);
+        receptionCounterRepository.save(receptionCounter);
         return ResponseEntity.ok(new ResponseData(true, "Ro'yxatdan o'tganligingiz uchun tashakkur. Operator javobini kuting", null));
 
     }

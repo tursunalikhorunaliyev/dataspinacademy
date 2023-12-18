@@ -21,4 +21,6 @@ public interface EmployeeInfo {
     StuffInfo getStuff();
 
     ImageDataInfo getPhoto();
+
+    String getAbout();
 }

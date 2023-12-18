@@ -2,17 +2,12 @@ package com.dataspin.dataspinacademy.service;
 
 
 import com.dataspin.dataspinacademy.dto.CourseWithPrice;
+import com.dataspin.dataspinacademy.dto.ReceptionCounterData;
 import com.dataspin.dataspinacademy.dto.ResponseData;
-import com.dataspin.dataspinacademy.entity.Course;
-import com.dataspin.dataspinacademy.entity.CoursePrice;
-import com.dataspin.dataspinacademy.entity.ImageData;
-import com.dataspin.dataspinacademy.entity.UserData;
+import com.dataspin.dataspinacademy.entity.*;
 import com.dataspin.dataspinacademy.projection.CourseInfo;
 import com.dataspin.dataspinacademy.projection.CoursePriceInfo;
-import com.dataspin.dataspinacademy.repository.CourseForRepository;
-import com.dataspin.dataspinacademy.repository.CoursePriceRepository;
-import com.dataspin.dataspinacademy.repository.CourseRepository;
-import com.dataspin.dataspinacademy.repository.CourseTypeRepository;
+import com.dataspin.dataspinacademy.repository.*;
 import com.dataspin.dataspinacademy.security.JWTGenerator;
 import lombok.AllArgsConstructor;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -24,6 +19,7 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 @Service
@@ -35,6 +31,7 @@ public class CourseService {
     private final CourseRepository courseRepository;
     private final JWTGenerator jwtGenerator;
     private final CoursePriceRepository coursePriceRepository;
+    private final ReceptionCounterRepository receptionCounterRepository;
 
 
     public ResponseEntity<ResponseData> create(String name, Long forId, Long typeId, MultipartFile photo, HttpServletRequest request) throws IOException {
@@ -52,6 +49,10 @@ public class CourseService {
         course.setPreviewPhoto(imageData);
         try {
             courseRepository.save(course);
+            ReceptionCounter receptionCounter = new ReceptionCounter();
+            receptionCounter.setActiveCount(0);
+            receptionCounter.setCourse(course);
+            receptionCounterRepository.save(receptionCounter);
             return ResponseEntity.ok(new ResponseData(true, "Ma'lumotlar saqlandi", null));
         } catch (DataIntegrityViolationException e) {
             return new ResponseEntity<>(new ResponseData(false, "Allaqachon mavjud", null), HttpStatus.BAD_REQUEST);
@@ -66,7 +67,9 @@ public class CourseService {
     public ResponseEntity<ResponseData> getWithPrice(){
         List<CourseInfo> courseList = courseRepository.findAllCourses();
         List<CoursePrice> lastPrices = coursePriceRepository.getLastPrices();
+        List<ReceptionCounter> receptionCounters = receptionCounterRepository.findAll();
         List<CourseWithPrice> courseWithPrices =  courseList.stream().map(e->{
+
             CourseWithPrice courseWithPrice = new CourseWithPrice();
             courseWithPrice.setCourse(e);
             lastPrices.forEach(priceData->{
@@ -74,8 +77,34 @@ public class CourseService {
                     courseWithPrice.setPrice(priceData.getPrice());
                 }
             });
+            receptionCounters.forEach(receptionCounter -> {
+                if(Objects.equals(receptionCounter.getCourse().getId(), e.getId())){
+
+                    courseWithPrice.setReception_counter(new ReceptionCounterData(receptionCounter.getTotalCount(), receptionCounter.getActiveCount() , receptionCounter.getInactiveCount()));
+                }
+            });
             return  courseWithPrice;
         }).toList();
         return  ResponseEntity.ok(new ResponseData(true, "Barcha kurslar", courseWithPrices));
+    }
+    public ResponseEntity<ResponseData> getCoursesByType(Long id){
+        if(!courseTypeRepository.existsById(id)){
+            return new ResponseEntity<>(new ResponseData(false, "Ma'lumotlar topilmadi", null), HttpStatus.BAD_REQUEST);
+        }
+        return ResponseEntity.ok(new ResponseData(true, "Success", courseRepository.findByCourseType_Id(id)));
+    }
+    public ResponseEntity<ResponseData> courseWithLastPrice(Long courseId){
+       CourseInfo course = courseRepository.findByIdInfo(courseId);
+       CoursePrice coursePrice = coursePriceRepository.findByLastPriceByCourseId(courseId);
+       CourseWithPrice courseWithPrice = new CourseWithPrice();
+       courseWithPrice.setCourse(course);
+       if(coursePrice==null){
+           courseWithPrice.setPrice(null);
+       }
+       else{
+           courseWithPrice.setPrice(coursePrice.getPrice());
+       }
+
+       return ResponseEntity.ok(new ResponseData(true, "Ma'lumotlar", courseWithPrice));
     }
 }

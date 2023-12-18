@@ -10,6 +10,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 
 @Repository
@@ -20,4 +21,10 @@ public interface CourseRepository extends JpaRepository<Course, Long> {
 
     @Query("SELECT c FROM Course c WHERE c.id IN (:ids)")
     Set<Course> getByInIds(@Param("ids") List<Long> ids);
+
+    List<CourseInfo> findByCourseType_Id(Long id);
+
+
+    @Query("SELECT c FROM Course c WHERE c.id = ?1")
+    CourseInfo findByIdInfo(Long aLong);
 }

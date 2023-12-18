@@ -31,4 +31,13 @@ public class CourseController {
     public ResponseEntity<ResponseData> getWithPrices(){
         return courseService.getWithPrice();
     }
+    @GetMapping("/by-type")
+    public ResponseEntity<ResponseData> getByTypeId(@RequestParam("id") Long id){
+        return courseService.getCoursesByType(id);
+    }
+    @GetMapping("/by")
+    public ResponseEntity<ResponseData> getById(@RequestParam Long id){
+        return courseService.courseWithLastPrice(id);
+    }
+
 }

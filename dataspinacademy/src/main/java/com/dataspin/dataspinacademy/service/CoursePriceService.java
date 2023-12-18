@@ -12,6 +12,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import javax.servlet.http.HttpServletRequest;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
@@ -33,8 +34,8 @@ public class CoursePriceService {
         CoursePrice coursePrice = new CoursePrice();
         coursePrice.setCourse(courseRepository.findById(coursePriceDTO.getCourseID()).get());
         coursePrice.setPrice(coursePriceDTO.getPrice());
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm");
-        LocalDateTime dateTime = LocalDateTime.parse(coursePriceDTO.getStartDate(), formatter);
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
+        LocalDate dateTime = LocalDate.parse(coursePriceDTO.getStartDate(), formatter);
         coursePrice.setStartDate(dateTime);
         coursePrice.setUser(userData);
         coursePriceRepository.save(coursePrice);

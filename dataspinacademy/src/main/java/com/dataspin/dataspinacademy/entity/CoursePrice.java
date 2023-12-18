@@ -13,7 +13,7 @@ import java.time.LocalDateTime;
 @Getter
 @Setter
 @Entity
-@Table(name = "course_price")
+@Table(name = "course_price", uniqueConstraints = @UniqueConstraint(columnNames = {"start_date", "course_id"}))
 public class CoursePrice {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -27,10 +27,12 @@ public class CoursePrice {
     @Column(nullable = false)
     private Integer price;
 
-    @Column(nullable = false)
-    private LocalDateTime startDate;
+    @Column(name = "start_date",nullable = false, unique = true)
+    private LocalDate startDate;
+
 
     @CreationTimestamp
+    @Column(unique = true)
     private Timestamp date;
 
     @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
