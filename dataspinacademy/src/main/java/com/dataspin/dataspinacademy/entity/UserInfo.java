@@ -39,8 +39,8 @@ public class UserInfo {
     private String telegramUsername;
 
     @OneToOne
-    @JoinColumn(name = "user", referencedColumnName = "id")
-    private UserData userData;
+    @JoinColumn(name = "user", referencedColumnName = "id", unique = true)
+    private UserData userData ;
 
     @CreationTimestamp
     private Timestamp date;

@@ -7,6 +7,7 @@ import com.dataspin.dataspinacademy.dto.ResponseData;
 import com.dataspin.dataspinacademy.entity.*;
 import com.dataspin.dataspinacademy.projection.CourseInfo;
 import com.dataspin.dataspinacademy.projection.CoursePriceInfo;
+import com.dataspin.dataspinacademy.projection.MentorInfoOnlyEmployeeAndCoursesId;
 import com.dataspin.dataspinacademy.repository.*;
 import com.dataspin.dataspinacademy.security.JWTGenerator;
 import lombok.AllArgsConstructor;
@@ -32,16 +33,19 @@ public class CourseService {
     private final JWTGenerator jwtGenerator;
     private final CoursePriceRepository coursePriceRepository;
     private final ReceptionCounterRepository receptionCounterRepository;
+    private final MentorRepository mentorRepository;
 
 
-    public ResponseEntity<ResponseData> create(String name, Long forId, Long typeId, MultipartFile photo, HttpServletRequest request) throws IOException {
+    public ResponseEntity<ResponseData> create(String name,String description, Long forId, Long typeId, MultipartFile photo, Boolean status, HttpServletRequest request) throws IOException {
 
         UserData userData = jwtGenerator.getUserFromRequest(request);
         Course course = new Course();
         course.setName(name);
+        course.setDescription(description);
         course.setCourseFor(courseForRepository.findById(forId).get());
         course.setCourseType(courseTypeRepository.findById(typeId).get());
         course.setUser(userData);
+        course.setStatus(status);
         ImageData imageData = new ImageData();
         imageData.setFilename(photo.getOriginalFilename());
         imageData.setContent(photo.getBytes());
@@ -51,6 +55,8 @@ public class CourseService {
             courseRepository.save(course);
             ReceptionCounter receptionCounter = new ReceptionCounter();
             receptionCounter.setActiveCount(0);
+            receptionCounter.setInactiveCount(0);
+            receptionCounter.setTotalCount(0);
             receptionCounter.setCourse(course);
             receptionCounterRepository.save(receptionCounter);
             return ResponseEntity.ok(new ResponseData(true, "Ma'lumotlar saqlandi", null));
@@ -63,11 +69,18 @@ public class CourseService {
     public ResponseEntity<ResponseData> getAll(){
         return ResponseEntity.ok(new ResponseData(true, "Barcha kurslar", courseRepository.findAllCourses()));
     }
+    public ResponseEntity<ResponseData> getAllByStatus(Boolean isActive){
+        return ResponseEntity.ok(new ResponseData(true, "Barcha kurslar", courseRepository.findByStatus(isActive)));
+    }
 
     public ResponseEntity<ResponseData> getWithPrice(){
         List<CourseInfo> courseList = courseRepository.findAllCourses();
         List<CoursePrice> lastPrices = coursePriceRepository.getLastPrices();
         List<ReceptionCounter> receptionCounters = receptionCounterRepository.findAll();
+        List<MentorInfoOnlyEmployeeAndCoursesId> mentors = mentorRepository.findAllMentorOnlyEmployeeAndCourseIds();
+
+
+
         List<CourseWithPrice> courseWithPrices =  courseList.stream().map(e->{
 
             CourseWithPrice courseWithPrice = new CourseWithPrice();
@@ -83,7 +96,14 @@ public class CourseService {
                     courseWithPrice.setReception_counter(new ReceptionCounterData(receptionCounter.getTotalCount(), receptionCounter.getActiveCount() , receptionCounter.getInactiveCount()));
                 }
             });
-            return  courseWithPrice;
+            mentors.forEach(mentor->{
+                mentor.getCourses().forEach(course->{
+                    if(course.getId().equals(e.getId())){
+                        courseWithPrice.setMentor(mentor);
+                    }
+                });
+            });
+            return courseWithPrice;
         }).toList();
         return  ResponseEntity.ok(new ResponseData(true, "Barcha kurslar", courseWithPrices));
     }

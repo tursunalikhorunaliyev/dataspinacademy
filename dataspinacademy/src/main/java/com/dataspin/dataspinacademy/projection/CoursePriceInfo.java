@@ -2,6 +2,7 @@ package com.dataspin.dataspinacademy.projection;
 
 import java.math.BigDecimal;
 import java.sql.Timestamp;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 /**
@@ -12,7 +13,7 @@ public interface CoursePriceInfo {
 
     Integer getPrice();
 
-    LocalDateTime getStartDate();
+    LocalDate getStartDate();
 
     Timestamp getDate();
 

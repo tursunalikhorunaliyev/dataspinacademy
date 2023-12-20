@@ -61,7 +61,6 @@ public class EmployeeService {
         } catch (DataIntegrityViolationException e) {
             return new ResponseEntity<>(new ResponseData(false, "Allaqachon mavjud", null), HttpStatus.BAD_REQUEST);
         }
-
     }
     public ResponseEntity<ResponseData> getAll(){
         return ResponseEntity.ok(new ResponseData(true, "Barcha hodimlar", employeeRepository.findAllInfo()));

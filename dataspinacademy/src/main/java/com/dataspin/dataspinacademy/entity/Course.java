@@ -20,6 +20,9 @@ public class Course {
     @Column(unique = true, nullable = false)
     private String name;
 
+    @Column(nullable = false)
+    private String description;
+
     @ManyToOne
     @JoinColumn(name = "course_for", referencedColumnName = "id")
     private CourseFor courseFor;
@@ -30,6 +33,9 @@ public class Course {
     @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JoinColumn(name = "image", referencedColumnName = "id", nullable = false, unique = true)
     private ImageData previewPhoto;
+
+    @Column(nullable = false)
+    private Boolean status;
 
     @CreationTimestamp
     private Timestamp date;

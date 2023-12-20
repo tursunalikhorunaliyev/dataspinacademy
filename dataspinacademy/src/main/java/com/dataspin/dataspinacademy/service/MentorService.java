@@ -37,16 +37,22 @@ public class MentorService {
 
         Mentor mentor = new Mentor();
         if(mentorDTO.getCourseIDs().length()==1){
-            Course course = courseRepository.findById(Long.parseLong(mentorDTO.getCourseIDs())).get();
-            mentor.setCourses(Collections.singleton(course));
+            Optional<Course> course = courseRepository.findById(Long.parseLong(mentorDTO.getCourseIDs()));
+            if(course.isEmpty()){
+                return new ResponseEntity<>(new ResponseData(false, "Bunday kurs topilmadi", null), HttpStatus.BAD_REQUEST);
+            }
+            mentor.setCourses(Collections.singleton(course.get()));
         }
         else{
             List<Long> courseIDs = Arrays.stream(mentorDTO.getCourseIDs().split(",")).map(Long::parseLong).collect(Collectors.toList());
             Set<Course> courses  = courseRepository.getByInIds(courseIDs);
+            if(courses.isEmpty()){
+                return new ResponseEntity<>(new ResponseData(false, "Bunday kurslar topilmadi", null), HttpStatus.BAD_REQUEST);
+            }
             mentor.setCourses(courses);
         }
         mentor.setEmployee(employee);
-        if(!mentorDTO.getSubMentors().isEmpty()){
+        if(mentorDTO.getSubMentors()!=null){
             mentor.setSubMentors(new HashSet<>(employeeRepository.getByInIds(Arrays.stream(mentorDTO.getSubMentors().split(",")).map(Long::parseLong).toList())));
         }
         mentor.setUser(userData);

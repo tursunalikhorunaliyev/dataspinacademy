@@ -7,6 +7,9 @@ public interface CourseInfo {
     Long getId();
 
     String getName();
+    String getDescription();
+
+    Boolean getStatus();
 
     CourseForInfo getCourseFor();
 

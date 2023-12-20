@@ -24,7 +24,7 @@ public class AboutUsDTO {
     @NotNull(message = "mainPhoto null bo'lishi mumkin emas")
     private MultipartFile main_photo;
     @NotNull(message = "mainPhoto null bo'lishi mumkin emas")
-    private MultipartFile license_photos;
-    private MultipartFile additional_photo;
+    private MultipartFile[] license_photos;
+    private MultipartFile[] additional_photos;
 
 }

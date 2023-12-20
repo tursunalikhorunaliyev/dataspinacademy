@@ -13,7 +13,7 @@ import javax.validation.constraints.NotNull;
 @Getter
 @Setter
 @AllArgsConstructor
-public class   MentorDTO {
+public class  MentorDTO {
     @NotNull(message = "Hodim kiritilmadi")
     private Long employeeID;
     @NotNull(message = "Kurs kiritilmadi")

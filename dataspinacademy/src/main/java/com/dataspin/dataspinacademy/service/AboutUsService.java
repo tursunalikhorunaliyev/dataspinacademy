@@ -6,6 +6,7 @@ import com.dataspin.dataspinacademy.entity.AboutUs;
 import com.dataspin.dataspinacademy.entity.ImageData;
 import com.dataspin.dataspinacademy.entity.UserData;
 import com.dataspin.dataspinacademy.repository.AboutUsRepository;
+import com.dataspin.dataspinacademy.repository.ImageDataRepository;
 import com.dataspin.dataspinacademy.repository.ReceptionRepository;
 import com.dataspin.dataspinacademy.security.JWTGenerator;
 import lombok.AllArgsConstructor;
@@ -16,8 +17,8 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
-import java.util.Collections;
-import java.util.Optional;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 @AllArgsConstructor
@@ -26,6 +27,7 @@ public class AboutUsService {
     private final JWTGenerator jwtGenerator;
     private final AboutUsRepository aboutUsRepository;
     private final ReceptionRepository receptionRepository;
+    private final ImageDataRepository imageDataRepository;
 
     public ResponseEntity<ResponseData> create(AboutUsDTO aboutUsDTO, HttpServletRequest request) throws IOException {
         UserData userData = jwtGenerator.getUserFromRequest(request);
@@ -44,19 +46,33 @@ public class AboutUsService {
         aboutUs.setMainPhoto(mainPhoto);
 
 
-        ImageData licenseImage = new ImageData();
-        licenseImage.setFilename(aboutUsDTO.getLicense_photos().getOriginalFilename());
-        licenseImage.setContent(aboutUsDTO.getLicense_photos().getBytes());
-        licenseImage.setUser(userData);
+        Set<ImageData> licensePhotos = Arrays.stream(aboutUsDTO.getLicense_photos()).map(photo->{
+            ImageData imageData = new ImageData();
+            imageData.setFilename(photo.getOriginalFilename());
+            try {
+                imageData.setContent(photo.getBytes());
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+            imageData.setUser(userData);
+            return imageData;
 
-        aboutUs.setLicensePhotos(Collections.singleton(licenseImage));
+        }).collect(Collectors.toSet());
+        aboutUs.setLicensePhotos(licensePhotos);
 
-        if(aboutUsDTO.getAdditional_photo() != null){
-            ImageData additionalPhoto = new ImageData();
-            additionalPhoto.setFilename(aboutUsDTO.getAdditional_photo().getOriginalFilename());
-            additionalPhoto.setContent(aboutUsDTO.getAdditional_photo().getBytes());
-            additionalPhoto.setUser(userData);
-            aboutUs.setAdditionalPhoto(Collections.singleton(additionalPhoto));
+        if(aboutUsDTO.getAdditional_photos() != null){
+          Set<ImageData> additionalImages =  Arrays.stream(aboutUsDTO.getAdditional_photos()).map(photo->{
+                ImageData imageData = new ImageData();
+                imageData.setFilename(photo.getOriginalFilename());
+                try {
+                    imageData.setContent(photo.getBytes());
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
+                imageData.setUser(userData);
+                return  imageData;
+            }).collect(Collectors.toSet());
+          aboutUs.setAdditionalPhoto(additionalImages);
         }
         aboutUs.setUser(userData);
         aboutUsRepository.save(aboutUs);
