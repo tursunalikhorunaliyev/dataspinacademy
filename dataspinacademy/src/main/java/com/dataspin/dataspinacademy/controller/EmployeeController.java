@@ -25,4 +25,8 @@ public class EmployeeController {
     public ResponseEntity<ResponseData> getAll(){
         return employeeService.getAll();
     }
+    @GetMapping("/teachers")
+    public ResponseEntity<ResponseData> getAllTeachers(){
+        return employeeService.getAllTeachers();
+    }
 }

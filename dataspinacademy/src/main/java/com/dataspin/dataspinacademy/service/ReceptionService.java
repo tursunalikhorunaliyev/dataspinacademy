@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @AllArgsConstructor
@@ -28,7 +29,10 @@ public class ReceptionService {
 
     public ResponseEntity<ResponseData> create(ReceptionDTO receptionDTO, HttpServletRequest request){
         UserData userData = jwtGenerator.getUserFromRequest(request);
-        UserInfo userInfo = userInfoRepository.findByUserData(userData);
+        Optional<UserInfo> userInfo = userInfoRepository.findByUserData(userData);
+        if(userInfo.isEmpty()){
+            return new ResponseEntity<>(new ResponseData(false, "Siz ro'yxatdan o'tmagansiz", null), HttpStatus.BAD_REQUEST);
+        }
         Reception reception = new Reception();
         Course course = courseRepository.findById(receptionDTO.getCourseID()).get();
         reception.setReceptionNumber(receptionDTO.getReceptionNumber());
@@ -37,7 +41,7 @@ public class ReceptionService {
         reception.setCourseFor(course.getCourseFor());
         reception.setCourseType(course.getCourseType());
         reception.setCoursePhoto(course.getPreviewPhoto());
-        reception.setUserInfo(userInfo);
+        reception.setUserInfo(userInfo.get());
         reception.setUser(userData);
 
         receptionRepository.save(reception);
@@ -58,7 +62,6 @@ public class ReceptionService {
         if(!isAdmin){
            return new ResponseEntity<>(new ResponseData(false, "Ushbu resursga murojaat qilish uchun huquqingiz yo'q", null), HttpStatus.BAD_REQUEST);
         }
-
         return ResponseEntity.ok(new ResponseData(true, "Barcha kursga yozilganlar", receptionRepository.findAllInfo()));
     }
 }

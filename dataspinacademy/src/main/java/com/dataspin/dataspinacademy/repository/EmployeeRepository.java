@@ -18,6 +18,8 @@ public interface EmployeeRepository extends JpaRepository<Employee, Long> {
     @Query("SELECT e FROM Employee e")
     List<EmployeeInfo> findAllInfo();
 
+    List<EmployeeInfo> findByStuff_Name(String name);
+
     @Query("SELECT e FROM Employee e WHERE e.id IN (:ids)")
     Set<Employee> getByInIds(@Param("ids") List<Long> ids);
 

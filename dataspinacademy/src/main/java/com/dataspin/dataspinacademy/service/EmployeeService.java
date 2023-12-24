@@ -65,4 +65,7 @@ public class EmployeeService {
     public ResponseEntity<ResponseData> getAll(){
         return ResponseEntity.ok(new ResponseData(true, "Barcha hodimlar", employeeRepository.findAllInfo()));
     }
+    public ResponseEntity<ResponseData> getAllTeachers(){
+        return ResponseEntity.ok(new ResponseData(true, "Barcha hodimlar", employeeRepository.findByStuff_Name("O'qituvchi")));
+    }
 }
