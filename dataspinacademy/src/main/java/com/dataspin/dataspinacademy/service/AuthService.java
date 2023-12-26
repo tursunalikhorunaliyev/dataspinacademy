@@ -61,7 +61,7 @@ public class AuthService {
        return ResponseEntity.ok(new ResponseData(true, "Sms jo'natildi", String.valueOf(randomInt)));
    }
    public ResponseEntity<ResponseData> checkCodeAdmin(String phone, String code){
-        if(phoneCodeRepository.existsByPhoneAndCode(phone, code)){
+        if(!phoneCodeRepository.existsByPhoneAndCode(phone, code)){
             final UserData user = new UserData();
             Role role = roleRepository.findByName("ADMIN").orElse(null);
             if (role == null) {
@@ -81,7 +81,7 @@ public class AuthService {
 
    }
     public ResponseEntity<ResponseData> checkCodeUser(String phone, String code){
-        if(phoneCodeRepository.existsByPhoneAndCode(phone, code)){
+        if(!phoneCodeRepository.existsByPhoneAndCode(phone, code)){
             final UserData user = new UserData();
             Role role = roleRepository.findByName("USER").orElse(null);
             if (role == null) {

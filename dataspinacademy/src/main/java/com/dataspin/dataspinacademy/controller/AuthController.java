@@ -34,7 +34,4 @@ public class AuthController {
     public  ResponseEntity<ResponseData> tokenSession(@RequestParam("phone") String phone,@RequestParam("code") String code){
         return  authService.tokenSession(phone, code);
     }
-
-
-
 }
