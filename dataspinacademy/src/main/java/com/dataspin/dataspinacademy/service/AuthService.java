@@ -61,19 +61,25 @@ public class AuthService {
        return ResponseEntity.ok(new ResponseData(true, "Sms jo'natildi", String.valueOf(randomInt)));
    }
    public ResponseEntity<ResponseData> checkCodeAdmin(String phone, String code){
-        if(!phoneCodeRepository.existsByPhoneAndCode(phone, code)){
-            final UserData user = new UserData();
-            Role role = roleRepository.findByName("ADMIN").orElse(null);
-            if (role == null) {
-                final Role forSaveRole = new Role();
-                forSaveRole.setName("ADMIN");
-                role = roleRepository.save(forSaveRole);
+        if(phoneCodeRepository.existsByPhoneAndCode(phone, code)){
+            if(userDataRepository.existsByPhone(phone)){
+                return ResponseEntity.ok(new ResponseData(true, "Success!", code));
             }
-            user.setPhone(phone);
-            user.setPass(passwordEncoder.encode(phone));
-            user.setRoles(Collections.singleton(role));
-            userDataRepository.save(user);
-            return ResponseEntity.ok(new ResponseData(true, "Success!", code));
+            else{
+
+                final UserData user = new UserData();
+                Role role = roleRepository.findByName("ADMIN").orElse(null);
+                if (role == null) {
+                    final Role forSaveRole = new Role();
+                    forSaveRole.setName("ADMIN");
+                    role = roleRepository.save(forSaveRole);
+                }
+                user.setPhone(phone);
+                user.setPass(passwordEncoder.encode(phone));
+                user.setRoles(Collections.singleton(role));
+                userDataRepository.save(user);
+                return ResponseEntity.ok(new ResponseData(true, "Success!", code));
+            }
         }
         else{
             return new ResponseEntity<>(new ResponseData(false, "Failed", null), HttpStatus.BAD_REQUEST);
@@ -81,19 +87,25 @@ public class AuthService {
 
    }
     public ResponseEntity<ResponseData> checkCodeUser(String phone, String code){
-        if(!phoneCodeRepository.existsByPhoneAndCode(phone, code)){
-            final UserData user = new UserData();
-            Role role = roleRepository.findByName("USER").orElse(null);
-            if (role == null) {
-                final Role forSaveRole = new Role();
-                forSaveRole.setName("USER");
-                role = roleRepository.save(forSaveRole);
+        if(phoneCodeRepository.existsByPhoneAndCode(phone, code)){
+            if(userDataRepository.existsByPhone(phone)){
+                return ResponseEntity.ok(new ResponseData(true, "Success!", code));
             }
-            user.setPhone(phone);
-            user.setPass(passwordEncoder.encode(phone));
-            user.setRoles(Collections.singleton(role));
-            userDataRepository.save(user);
-            return ResponseEntity.ok(new ResponseData(true, "Success!", code));
+            else{
+
+                final UserData user = new UserData();
+                Role role = roleRepository.findByName("USER").orElse(null);
+                if (role == null) {
+                    final Role forSaveRole = new Role();
+                    forSaveRole.setName("USER");
+                    role = roleRepository.save(forSaveRole);
+                }
+                user.setPhone(phone);
+                user.setPass(passwordEncoder.encode(phone));
+                user.setRoles(Collections.singleton(role));
+                userDataRepository.save(user);
+                return ResponseEntity.ok(new ResponseData(true, "Success!", code));
+            }
         }
         else{
             return new ResponseEntity<>(new ResponseData(false, "Failed", null), HttpStatus.BAD_REQUEST);
