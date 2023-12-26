@@ -20,14 +20,19 @@ public class AuthController {
        return authService.sendCode(phone);
     }
 
-    @PostMapping("/send-code/admin-send")
-    public ResponseEntity<ResponseData> sendCodeAdmin(@RequestParam("phone") String phone){
-        return authService.createAdmin(phone);
+    @PostMapping("/send-code/admin-check")
+    public ResponseEntity<ResponseData> sendCodeAdmin(@RequestParam("phone") String phone, @RequestParam("code") String code){
+        return authService.checkCodeAdmin(phone, code);
     }
 
-    @PostMapping("/check-code")
-    public  ResponseEntity<ResponseData> checkCode(@RequestParam("phone") String phone,@RequestParam("code") String code){
-        return  authService.checkCode(phone, code);
+    @PostMapping("/check-code/user-check")
+    public  ResponseEntity<ResponseData> checkCodeUser(@RequestParam("phone") String phone,@RequestParam("code") String code){
+        return  authService.checkCodeUser(phone, code);
+    }
+
+    @PostMapping("/token-session")
+    public  ResponseEntity<ResponseData> tokenSession(@RequestParam("phone") String phone,@RequestParam("code") String code){
+        return  authService.tokenSession(phone, code);
     }
 
 
