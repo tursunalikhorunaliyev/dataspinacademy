@@ -19,7 +19,7 @@ public class Mentor {
     private Long id;
 
     @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    @JoinColumn(name = "employee", referencedColumnName = "id", nullable = false)
+    @JoinColumn(name = "employee", referencedColumnName = "id", nullable = false, unique = true)
     private Employee employee;
 
     @ManyToMany
