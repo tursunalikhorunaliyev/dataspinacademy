@@ -24,7 +24,7 @@ public class MentorController {
     }
 
     @PostMapping("/update")
-    public ResponseEntity<ResponseData> update(@RequestParam("id") Long id, @Nullable @RequestParam("courseIDs") String courseIDs, @RequestParam("subMentors") String subMentors, HttpServletRequest request) {
+    public ResponseEntity<ResponseData> update(@RequestParam("id") Long id, @RequestParam("courseIDs") String courseIDs, @Nullable @RequestParam("subMentors") String subMentors, HttpServletRequest request) {
         return mentorService.update(id, courseIDs, subMentors, request);
     }
 
