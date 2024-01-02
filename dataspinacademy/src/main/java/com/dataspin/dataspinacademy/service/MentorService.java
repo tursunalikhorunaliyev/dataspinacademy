@@ -64,16 +64,15 @@ public class MentorService {
 
     }
 
-    public ResponseEntity<ResponseData> update(Long id, MentorDTO mentorDTO, HttpServletRequest request) {
+    public ResponseEntity<ResponseData> update(Long id, String courseIds, String subMentors, HttpServletRequest request) {
         UserData userData = jwtGenerator.getUserFromRequest(request);
-        Employee employee = employeeRepository.findById(mentorDTO.getEmployeeID()).get();
         Optional<Mentor> oldMentor = mentorRepository.findById(id);
 
         if (oldMentor.isEmpty()) {
             return new ResponseEntity<>(new ResponseData(false, "Mentor topilmadi.", null), HttpStatus.BAD_REQUEST);
         }
 
-        if (!employee.getStuff().getName().equals("O'qituvchi")) {
+        if (!oldMentor.get().getEmployee().getStuff().getName().equals("O'qituvchi")) {
             return new ResponseEntity<>(new ResponseData(false, "Bu hodim o'qituvchi lavozimida emas.", null), HttpStatus.BAD_REQUEST);
         }
 
@@ -82,22 +81,22 @@ public class MentorService {
         mentor.setId(oldMentor.get().getId());
         mentor.setEmployee(oldMentor.get().getEmployee());
 
-        if (mentorDTO.getCourseIDs().length() == 1) {
-            Optional<Course> course = courseRepository.findById(Long.parseLong(mentorDTO.getCourseIDs()));
+        if (courseIds.length() == 1) {
+            Optional<Course> course = courseRepository.findById(Long.parseLong(courseIds));
             if (course.isEmpty()) {
                 return new ResponseEntity<>(new ResponseData(false, "Bunday kurs topilmadi", null), HttpStatus.BAD_REQUEST);
             }
             mentor.setCourses(Collections.singleton(course.get()));
         } else {
-            List<Long> courseIDs = Arrays.stream(mentorDTO.getCourseIDs().split(",")).map(Long::parseLong).collect(Collectors.toList());
+            List<Long> courseIDs = Arrays.stream(courseIds.split(",")).map(Long::parseLong).collect(Collectors.toList());
             Set<Course> courses = courseRepository.getByInIds(courseIDs);
             if (courses.isEmpty()) {
                 return new ResponseEntity<>(new ResponseData(false, "Bunday kurslar topilmadi", null), HttpStatus.BAD_REQUEST);
             }
             mentor.setCourses(courses);
         }
-        if (mentorDTO.getSubMentors() != null) {
-            mentor.setSubMentors(new HashSet<>(employeeRepository.getByInIds(Arrays.stream(mentorDTO.getSubMentors().split(",")).map(Long::parseLong).toList())));
+        if (subMentors != null) {
+            mentor.setSubMentors(new HashSet<>(employeeRepository.getByInIds(Arrays.stream(subMentors.split(",")).map(Long::parseLong).toList())));
         }
         mentor.setUser(userData);
         try {

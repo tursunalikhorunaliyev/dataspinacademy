@@ -16,18 +16,19 @@ import javax.validation.Valid;
 @AllArgsConstructor
 public class MentorController {
     private final MentorService mentorService;
+
     @PostMapping("/new")
-    public ResponseEntity<ResponseData> create(@RequestBody @Valid MentorDTO mentorDTO, HttpServletRequest request){
+    public ResponseEntity<ResponseData> create(@RequestBody @Valid MentorDTO mentorDTO, HttpServletRequest request) {
         return mentorService.create(mentorDTO, request);
     }
 
     @PostMapping("/update")
-    public ResponseEntity<ResponseData> update(@RequestParam("id") Long id, @RequestBody @Valid MentorDTO mentorDTO, HttpServletRequest request){
-        return mentorService.update(id, mentorDTO, request);
+    public ResponseEntity<ResponseData> update(@RequestParam("id") Long id, @RequestParam("courseIDs") String courseIDs, @RequestParam("subMentors") String subMentors, HttpServletRequest request) {
+        return mentorService.update(id, courseIDs, subMentors, request);
     }
 
     @GetMapping("/")
-    public ResponseEntity<ResponseData> getAll(){
+    public ResponseEntity<ResponseData> getAll() {
         return mentorService.getAll();
     }
 
