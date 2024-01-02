@@ -32,11 +32,26 @@ public class AboutUsService {
     public ResponseEntity<ResponseData> create(AboutUsDTO aboutUsDTO, HttpServletRequest request) throws IOException {
         UserData userData = jwtGenerator.getUserFromRequest(request);
         AboutUs aboutUs = new AboutUs();
+        aboutUs.setId(1L);
         aboutUs.setAcademyName(aboutUsDTO.getAcademy_name());
         aboutUs.setActivityDesc(aboutUsDTO.getActivity_desc());
         aboutUs.setFullAboutUs(aboutUsDTO.getFull_about_us());
         aboutUs.setYouTubeLinks(aboutUsDTO.getYoutube_links());
         aboutUs.setOurLocation(aboutUsDTO.getOur_location());
+
+        final Optional<AboutUs> a = aboutUsRepository.findById(aboutUs.getId());
+        if (a.isPresent()) {
+            List<Long> additionalImageIds = a.get().getAdditionalPhoto().stream().map(ImageData::getId).toList();
+            List<Long> licenseImageIds = a.get().getLicensePhotos().stream().map(ImageData::getId).toList();
+            Long mainPhotoId = a.get().getMainPhoto().getId();
+            imageDataRepository.deleteById(mainPhotoId);
+            if (!additionalImageIds.isEmpty()) {
+                imageDataRepository.deleteByIds(additionalImageIds);
+            }
+            if (!licenseImageIds.isEmpty()) {
+                imageDataRepository.deleteByIds(licenseImageIds);
+            }
+        }
 
         ImageData mainPhoto = new ImageData();
         mainPhoto.setFilename(aboutUsDTO.getMain_photo().getOriginalFilename());
@@ -46,7 +61,7 @@ public class AboutUsService {
         aboutUs.setMainPhoto(mainPhoto);
 
 
-        Set<ImageData> licensePhotos = Arrays.stream(aboutUsDTO.getLicense_photos()).map(photo->{
+        Set<ImageData> licensePhotos = Arrays.stream(aboutUsDTO.getLicense_photos()).map(photo -> {
             ImageData imageData = new ImageData();
             imageData.setFilename(photo.getOriginalFilename());
             try {
@@ -60,8 +75,8 @@ public class AboutUsService {
         }).collect(Collectors.toSet());
         aboutUs.setLicensePhotos(licensePhotos);
 
-        if(aboutUsDTO.getAdditional_photos() != null){
-          Set<ImageData> additionalImages =  Arrays.stream(aboutUsDTO.getAdditional_photos()).map(photo->{
+        if (aboutUsDTO.getAdditional_photos() != null) {
+            Set<ImageData> additionalImages = Arrays.stream(aboutUsDTO.getAdditional_photos()).map(photo -> {
                 ImageData imageData = new ImageData();
                 imageData.setFilename(photo.getOriginalFilename());
                 try {
@@ -70,19 +85,21 @@ public class AboutUsService {
                     throw new RuntimeException(e);
                 }
                 imageData.setUser(userData);
-                return  imageData;
+                return imageData;
             }).collect(Collectors.toSet());
-          aboutUs.setAdditionalPhoto(additionalImages);
+            aboutUs.setAdditionalPhoto(additionalImages);
         }
         aboutUs.setUser(userData);
         aboutUsRepository.save(aboutUs);
 
-        return ResponseEntity.ok(new ResponseData(true,"Barcha ma'lumotlar saqlandi", null));
+        return ResponseEntity.ok(new ResponseData(true, "Barcha ma'lumotlar saqlandi", null));
 
     }
+
     public ResponseEntity<ResponseData> addLicensePhoto(MultipartFile photo, HttpServletRequest request) throws IOException {
         return addPhoto(photo, request, true);
     }
+
     public ResponseEntity<ResponseData> addAdditionalPhoto(MultipartFile photo, HttpServletRequest request) throws IOException {
         return addPhoto(photo, request, false);
     }
@@ -95,21 +112,19 @@ public class AboutUsService {
         imageData.setUser(userData);
 
         Optional<AboutUs> aboutUs = aboutUsRepository.findAll().stream().findFirst();
-        if(aboutUs.isEmpty()){
+        if (aboutUs.isEmpty()) {
             return new ResponseEntity<>(new ResponseData(false, "Oldin birorta ham ma'lumot yaratilmagan", null), HttpStatus.BAD_REQUEST);
         }
-       if(isLicense){
-           aboutUs.get().getLicensePhotos().add(imageData);
-       }
-       else{
-           aboutUs.get().getAdditionalPhoto().add(imageData);
-       }
+        if (isLicense) {
+            aboutUs.get().getLicensePhotos().add(imageData);
+        } else {
+            aboutUs.get().getAdditionalPhoto().add(imageData);
+        }
         aboutUs.ifPresent(aboutUsRepository::save);
         return ResponseEntity.ok(new ResponseData(true, "Saqlandi", null));
     }
 
-    public ResponseEntity<ResponseData> getAllInformation(){
+    public ResponseEntity<ResponseData> getAllInformation() {
         return ResponseEntity.ok(new ResponseData(true, "Barcha ma'lumotlar", aboutUsRepository.findAllInfo().stream().findFirst()));
     }
-
 }
