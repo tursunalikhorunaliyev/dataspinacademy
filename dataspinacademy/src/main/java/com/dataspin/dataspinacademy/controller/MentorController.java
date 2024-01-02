@@ -6,6 +6,7 @@ import com.dataspin.dataspinacademy.service.MentorService;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import org.springframework.http.ResponseEntity;
+import org.springframework.lang.Nullable;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
@@ -23,7 +24,7 @@ public class MentorController {
     }
 
     @PostMapping("/update")
-    public ResponseEntity<ResponseData> update(@RequestParam("id") Long id, @RequestParam("courseIDs") String courseIDs, @RequestParam("subMentors") String subMentors, HttpServletRequest request) {
+    public ResponseEntity<ResponseData> update(@RequestParam("id") Long id, @Nullable @RequestParam("courseIDs") String courseIDs, @RequestParam("subMentors") String subMentors, HttpServletRequest request) {
         return mentorService.update(id, courseIDs, subMentors, request);
     }
 
