@@ -101,7 +101,7 @@ public class MentorService {
         mentor.setUser(userData);
         try {
             mentorRepository.save(mentor);
-            return ResponseEntity.ok(new ResponseData(true, "Ma'lumotlar saqlandi", null));
+            return ResponseEntity.ok(new ResponseData(true, "Ma'lumotlar yangilandi", null));
         } catch (DataIntegrityViolationException e) {
             return new ResponseEntity<>(new ResponseData(false, "Allaqachon mavjud", null), HttpStatus.BAD_REQUEST);
         }
