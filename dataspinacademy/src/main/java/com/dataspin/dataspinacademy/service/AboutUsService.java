@@ -31,13 +31,11 @@ public class AboutUsService {
 
     public ResponseEntity<ResponseData> create(AboutUsDTO aboutUsDTO, HttpServletRequest request) throws IOException {
         UserData userData = jwtGenerator.getUserFromRequest(request);
-        final Optional<AboutUs> a = aboutUsRepository.findById(1L);
-        if (a.isPresent()) {
-            aboutUsRepository.deleteById(1L);
-            List<Long> additionalImageIds = a.get().getAdditionalPhoto().stream().map(ImageData::getId).toList();
-            List<Long> licenseImageIds = a.get().getLicensePhotos().stream().map(ImageData::getId).toList();
-            Long mainPhotoId = a.get().getMainPhoto().getId();
-            imageDataRepository.deleteById(mainPhotoId);
+        final List<AboutUs> a = aboutUsRepository.findAll();
+        if (a.size() == 1) {
+            List<Long> additionalImageIds = a.get(0).getAdditionalPhoto().stream().map(ImageData::getId).toList();
+            List<Long> licenseImageIds = a.get(0).getLicensePhotos().stream().map(ImageData::getId).toList();
+            aboutUsRepository.deleteById(a.get(0).getId());
             if (!additionalImageIds.isEmpty()) {
                 imageDataRepository.deleteByIds(additionalImageIds);
             }
@@ -46,7 +44,6 @@ public class AboutUsService {
             }
         }
         AboutUs aboutUs = new AboutUs();
-        aboutUs.setId(1L);
         aboutUs.setAcademyName(aboutUsDTO.getAcademy_name());
         aboutUs.setActivityDesc(aboutUsDTO.getActivity_desc());
         aboutUs.setFullAboutUs(aboutUsDTO.getFull_about_us());
