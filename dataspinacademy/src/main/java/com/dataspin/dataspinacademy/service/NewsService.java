@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
+import java.util.Collections;
 import java.util.Optional;
 
 @Service
@@ -55,8 +56,8 @@ public class NewsService {
         if (!isAdmin) {
             return new ResponseEntity<>(new ResponseData(false, "Ushbu resursga murojaat qilish huquqingiz yo'q", null), HttpStatus.BAD_REQUEST);
         }
-        newsRepository.deleteById(oldNews.get().getId());
-        System.out.println(oldNews.get().getId());
+        newsRepository.deleteManually(id);
+        imageDataRepository.deleteByIds(Collections.singletonList(oldNews.get().getPhoto().getId()));
         News news = new News();
         news.setName(newsDTO.getName());
         news.setShortDesc(newsDTO.getShortDesc());
@@ -69,6 +70,21 @@ public class NewsService {
         news.setUser(userData);
         newsRepository.save(news);
         return ResponseEntity.ok(new ResponseData(true, "Ma'lumotlar yangilandi", null));
+    }
+
+    public ResponseEntity<ResponseData> delete(Long id, HttpServletRequest request) {
+        UserData userData = jwtGenerator.getUserFromRequest(request);
+        final boolean isAdmin = jwtGenerator.isAdmin(userData);
+        final Optional<News> oldNews = newsRepository.findById(id);
+        if (oldNews.isEmpty()) {
+            return new ResponseEntity<>(new ResponseData(false, "Yangilik topilmadi", null), HttpStatus.BAD_REQUEST);
+        }
+        if (!isAdmin) {
+            return new ResponseEntity<>(new ResponseData(false, "Ushbu resursga murojaat qilish huquqingiz yo'q", null), HttpStatus.BAD_REQUEST);
+        }
+        newsRepository.deleteManually(id);
+        imageDataRepository.deleteByIds(Collections.singletonList(oldNews.get().getPhoto().getId()));
+        return ResponseEntity.ok(new ResponseData(true, "Ma'lumotlar o'chirildi", null));
     }
 
     public ResponseEntity<ResponseData> getAll() {
