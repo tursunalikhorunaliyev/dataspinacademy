@@ -31,16 +31,9 @@ public class AboutUsService {
 
     public ResponseEntity<ResponseData> create(AboutUsDTO aboutUsDTO, HttpServletRequest request) throws IOException {
         UserData userData = jwtGenerator.getUserFromRequest(request);
-        AboutUs aboutUs = new AboutUs();
-        aboutUs.setId(1L);
-        aboutUs.setAcademyName(aboutUsDTO.getAcademy_name());
-        aboutUs.setActivityDesc(aboutUsDTO.getActivity_desc());
-        aboutUs.setFullAboutUs(aboutUsDTO.getFull_about_us());
-        aboutUs.setYouTubeLinks(aboutUsDTO.getYoutube_links());
-        aboutUs.setOurLocation(aboutUsDTO.getOur_location());
-
-        final Optional<AboutUs> a = aboutUsRepository.findById(aboutUs.getId());
+        final Optional<AboutUs> a = aboutUsRepository.findById(1L);
         if (a.isPresent()) {
+            aboutUsRepository.deleteById(1L);
             List<Long> additionalImageIds = a.get().getAdditionalPhoto().stream().map(ImageData::getId).toList();
             List<Long> licenseImageIds = a.get().getLicensePhotos().stream().map(ImageData::getId).toList();
             Long mainPhotoId = a.get().getMainPhoto().getId();
@@ -52,6 +45,14 @@ public class AboutUsService {
                 imageDataRepository.deleteByIds(licenseImageIds);
             }
         }
+        AboutUs aboutUs = new AboutUs();
+        aboutUs.setId(1L);
+        aboutUs.setAcademyName(aboutUsDTO.getAcademy_name());
+        aboutUs.setActivityDesc(aboutUsDTO.getActivity_desc());
+        aboutUs.setFullAboutUs(aboutUsDTO.getFull_about_us());
+        aboutUs.setYouTubeLinks(aboutUsDTO.getYoutube_links());
+        aboutUs.setOurLocation(aboutUsDTO.getOur_location());
+
 
         ImageData mainPhoto = new ImageData();
         mainPhoto.setFilename(aboutUsDTO.getMain_photo().getOriginalFilename());
