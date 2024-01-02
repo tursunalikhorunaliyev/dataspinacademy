@@ -22,7 +22,7 @@ public class AboutUs {
     @Column(nullable = false)
     private String activityDesc;
 
-    @Column(nullable = false)
+    @Column(nullable = false, length = 2000)
     private String fullAboutUs;
 
     private String youTubeLinks;
