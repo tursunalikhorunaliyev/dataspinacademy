@@ -26,33 +26,32 @@ public class MentorService {
     private final CourseRepository courseRepository;
     private final MentorRepository mentorRepository;
 
-    public ResponseEntity<ResponseData> create(MentorDTO mentorDTO, HttpServletRequest request){
+    public ResponseEntity<ResponseData> create(MentorDTO mentorDTO, HttpServletRequest request) {
         UserData userData = jwtGenerator.getUserFromRequest(request);
         Employee employee = employeeRepository.findById(mentorDTO.getEmployeeID()).get();
 
 
-        if(!employee.getStuff().getName().equals("O'qituvchi")){
+        if (!employee.getStuff().getName().equals("O'qituvchi")) {
             return new ResponseEntity<>(new ResponseData(false, "Bu hodim o'qituvchi lavozimida emas.", null), HttpStatus.BAD_REQUEST);
         }
 
         Mentor mentor = new Mentor();
-        if(mentorDTO.getCourseIDs().length()==1){
+        if (mentorDTO.getCourseIDs().length() == 1) {
             Optional<Course> course = courseRepository.findById(Long.parseLong(mentorDTO.getCourseIDs()));
-            if(course.isEmpty()){
+            if (course.isEmpty()) {
                 return new ResponseEntity<>(new ResponseData(false, "Bunday kurs topilmadi", null), HttpStatus.BAD_REQUEST);
             }
             mentor.setCourses(Collections.singleton(course.get()));
-        }
-        else{
+        } else {
             List<Long> courseIDs = Arrays.stream(mentorDTO.getCourseIDs().split(",")).map(Long::parseLong).collect(Collectors.toList());
-            Set<Course> courses  = courseRepository.getByInIds(courseIDs);
-            if(courses.isEmpty()){
+            Set<Course> courses = courseRepository.getByInIds(courseIDs);
+            if (courses.isEmpty()) {
                 return new ResponseEntity<>(new ResponseData(false, "Bunday kurslar topilmadi", null), HttpStatus.BAD_REQUEST);
             }
             mentor.setCourses(courses);
         }
         mentor.setEmployee(employee);
-        if(mentorDTO.getSubMentors()!=null){
+        if (mentorDTO.getSubMentors() != null) {
             mentor.setSubMentors(new HashSet<>(employeeRepository.getByInIds(Arrays.stream(mentorDTO.getSubMentors().split(",")).map(Long::parseLong).toList())));
         }
         mentor.setUser(userData);
@@ -64,7 +63,53 @@ public class MentorService {
         }
 
     }
-    public ResponseEntity<ResponseData> getAll(){
+
+    public ResponseEntity<ResponseData> update(Long id, MentorDTO mentorDTO, HttpServletRequest request) {
+        UserData userData = jwtGenerator.getUserFromRequest(request);
+        Employee employee = employeeRepository.findById(mentorDTO.getEmployeeID()).get();
+        Optional<Mentor> oldMentor = mentorRepository.findById(id);
+
+        if (oldMentor.isEmpty()) {
+            return new ResponseEntity<>(new ResponseData(false, "Mentor topilmadi.", null), HttpStatus.BAD_REQUEST);
+        }
+
+        if (!employee.getStuff().getName().equals("O'qituvchi")) {
+            return new ResponseEntity<>(new ResponseData(false, "Bu hodim o'qituvchi lavozimida emas.", null), HttpStatus.BAD_REQUEST);
+        }
+
+        Mentor mentor = new Mentor();
+
+        mentor.setId(oldMentor.get().getId());
+        mentor.setEmployee(oldMentor.get().getEmployee());
+
+        if (mentorDTO.getCourseIDs().length() == 1) {
+            Optional<Course> course = courseRepository.findById(Long.parseLong(mentorDTO.getCourseIDs()));
+            if (course.isEmpty()) {
+                return new ResponseEntity<>(new ResponseData(false, "Bunday kurs topilmadi", null), HttpStatus.BAD_REQUEST);
+            }
+            mentor.setCourses(Collections.singleton(course.get()));
+        } else {
+            List<Long> courseIDs = Arrays.stream(mentorDTO.getCourseIDs().split(",")).map(Long::parseLong).collect(Collectors.toList());
+            Set<Course> courses = courseRepository.getByInIds(courseIDs);
+            if (courses.isEmpty()) {
+                return new ResponseEntity<>(new ResponseData(false, "Bunday kurslar topilmadi", null), HttpStatus.BAD_REQUEST);
+            }
+            mentor.setCourses(courses);
+        }
+        if (mentorDTO.getSubMentors() != null) {
+            mentor.setSubMentors(new HashSet<>(employeeRepository.getByInIds(Arrays.stream(mentorDTO.getSubMentors().split(",")).map(Long::parseLong).toList())));
+        }
+        mentor.setUser(userData);
+        try {
+            mentorRepository.save(mentor);
+            return ResponseEntity.ok(new ResponseData(true, "Ma'lumotlar saqlandi", null));
+        } catch (DataIntegrityViolationException e) {
+            return new ResponseEntity<>(new ResponseData(false, "Allaqachon mavjud", null), HttpStatus.BAD_REQUEST);
+        }
+
+    }
+
+    public ResponseEntity<ResponseData> getAll() {
         return ResponseEntity.ok(new ResponseData(true, "Barcha mentorlar", mentorRepository.findAllMentor()));
     }
 }

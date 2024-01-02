@@ -20,6 +20,12 @@ public class MentorController {
     public ResponseEntity<ResponseData> create(@RequestBody @Valid MentorDTO mentorDTO, HttpServletRequest request){
         return mentorService.create(mentorDTO, request);
     }
+
+    @PostMapping("/update")
+    public ResponseEntity<ResponseData> update(@RequestParam("id") Long id, @RequestBody @Valid MentorDTO mentorDTO, HttpServletRequest request){
+        return mentorService.update(id, mentorDTO, request);
+    }
+
     @GetMapping("/")
     public ResponseEntity<ResponseData> getAll(){
         return mentorService.getAll();
