@@ -18,6 +18,12 @@ public class NewsController {
     public ResponseEntity<ResponseData> create(@ModelAttribute @Valid NewsDTO newsDTO, HttpServletRequest request) throws IOException {
         return newsService.create(newsDTO, request);
     }
+
+    @PostMapping("/update")
+    public ResponseEntity<ResponseData> update(@ModelAttribute @Valid NewsDTO newsDTO, @RequestParam("id") Long id, HttpServletRequest request) throws IOException {
+        return newsService.update(id, newsDTO, request);
+    }
+
     @GetMapping("/")
     public ResponseEntity<ResponseData> getAll(){
         return newsService.getAll();

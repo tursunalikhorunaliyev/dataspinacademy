@@ -25,7 +25,7 @@ public class News {
     @Column(nullable = false)
     private String fullDesc;
 
-    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JoinColumn(name = "image", referencedColumnName = "id", nullable = false, unique = true)
     private ImageData photo;
 
