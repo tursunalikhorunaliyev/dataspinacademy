@@ -30,6 +30,9 @@ public class Mentor {
     @JoinTable(name = "sub_mentors", joinColumns = @JoinColumn(name = "mentor_id", referencedColumnName = "id"), inverseJoinColumns = @JoinColumn(name = "employee_id", referencedColumnName = "id"))
     private Set<Employee> subMentors;
 
+
+    private String youTubeLinks;
+
     @CreationTimestamp
     private Timestamp date;
 

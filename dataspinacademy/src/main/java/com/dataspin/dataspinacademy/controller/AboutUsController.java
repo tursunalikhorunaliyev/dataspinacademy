@@ -37,4 +37,8 @@ public class AboutUsController {
     public ResponseEntity<ResponseData> getAllInformation(){
         return aboutUsService.getAllInformation();
     }
+    @PostMapping("/youtube")
+    public ResponseEntity<ResponseData> addYouTubeLinks(@RequestParam("links") String links){
+        return aboutUsService.changeYouTubeLinks(links);
+    }
 }

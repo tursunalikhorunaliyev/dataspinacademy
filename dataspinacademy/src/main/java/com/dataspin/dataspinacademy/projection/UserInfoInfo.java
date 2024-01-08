@@ -21,7 +21,5 @@ public interface UserInfoInfo {
 
     String getSecondaryPhone();
 
-    String getTelegramUsername();
-
     Timestamp getDate();
 }

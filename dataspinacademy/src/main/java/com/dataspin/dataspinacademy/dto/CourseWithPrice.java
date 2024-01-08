@@ -14,7 +14,7 @@ import javax.validation.constraints.NotNull;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class  CourseWithPrice {
+public class CourseWithPrice {
     private CourseInfo course;
 
     private MentorInfoOnlyEmployeeAndCoursesId mentor;

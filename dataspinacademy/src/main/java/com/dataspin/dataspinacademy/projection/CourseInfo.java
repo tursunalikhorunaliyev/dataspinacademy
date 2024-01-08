@@ -11,6 +11,8 @@ public interface CourseInfo {
 
     Boolean getStatus();
 
+    CourseAboutPartInfo getCourseAboutParts();
+
     CourseForInfo getCourseFor();
 
     CourseTypeInfo getCourseType();

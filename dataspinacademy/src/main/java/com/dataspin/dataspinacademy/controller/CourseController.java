@@ -27,8 +27,8 @@ public class CourseController {
         return courseService.getAllByStatus(isActive);
     }
     @PostMapping("/new")
-    public ResponseEntity<ResponseData> create(@RequestParam("name") String name, @RequestParam("description") String description, @RequestParam("forId") Long forId, @RequestParam("typeId") Long typeId, @RequestParam("preview") MultipartFile preview, @RequestParam("status") Boolean status,HttpServletRequest request) throws IOException {
-      return courseService.create(name, description, forId, typeId, preview, status, request);
+    public ResponseEntity<ResponseData> create(@RequestParam("name") String name, @RequestParam("description") String description, @RequestParam("forId") Long forId, @RequestParam("typeId") Long typeId, @RequestParam("preview") MultipartFile preview, @RequestParam("about_part_ids") String apIds,  @RequestParam("status") Boolean status,HttpServletRequest request) throws IOException {
+      return courseService.create(name, description, forId, typeId, preview, apIds, status, request);
     }
     @GetMapping("/with-prices")
     public ResponseEntity<ResponseData> getWithPrices(){

@@ -2,7 +2,37 @@ plugins {
 	id 'java'
 	id 'org.springframework.boot' version '2.7.13'
 	id 'io.spring.dependency-management' version '1.1.0'
+	//id "com.github.node-gradle.node" version "3.5.0"
 }
+/*node {
+
+	download = false
+	// identify working directory in project
+	workDir = file("${project.projectDir}/src/main/frontend-ui/dataspinacademy/nodejs")
+	// NPM  work directory
+	npmWorkDir = file("${project.projectDir}/src/main/frontend-ui/dataspinacademy/npm")
+	// node modules directory
+	nodeModulesDir = file("${project.projectDir}/src/main/frontend-ui/dataspinacademy")
+}
+
+task appNpmInstall(type: NpmTask){
+	description = " read packge.json and install all jars"
+	workingDir = file("${project.projectDir}/src/main/frontend-ui/dataspinacademy")
+	args =["install", "--debug"]
+}
+task appNpmBuild(type: NpmTask){
+	description = "Builds applciation for your frontend "
+	workingDir =  file("${project.projectDir}/src/main/frontend-ui/dataspinacademy")
+	args =["run", "build"]
+}
+task copyToFrontend(type: Copy){
+	from "$projectDir/src/main/frontend-ui/dataspinacademy/build/"
+	into "$buildDir/resources/main/static"
+}
+
+appNpmBuild.dependsOn appNpmInstall
+copyToFrontend.dependsOn appNpmBuild
+compileJava.dependsOn copyToFrontend*/
 
 group = 'com.dataspin'
 version = '0.0.1-SNAPSHOT'

@@ -6,6 +6,7 @@ import org.hibernate.annotations.CreationTimestamp;
 
 import javax.persistence.*;
 import java.sql.Timestamp;
+import java.util.Set;
 
 @Getter
 @Setter
@@ -36,6 +37,10 @@ public class Course {
 
     @Column(nullable = false)
     private Boolean status;
+
+    @ManyToMany(fetch = FetchType.EAGER, cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
+    @JoinTable(name = "course_course_about_part", joinColumns = @JoinColumn(name = "course_id", referencedColumnName = "id"), inverseJoinColumns = @JoinColumn(name = "part_id", referencedColumnName = "id"))
+    Set<CourseAboutPart> courseAboutParts;
 
     @CreationTimestamp
     private Timestamp date;

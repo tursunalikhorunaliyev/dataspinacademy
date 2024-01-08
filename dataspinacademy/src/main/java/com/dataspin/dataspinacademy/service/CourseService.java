@@ -19,8 +19,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -34,11 +33,15 @@ public class CourseService {
     private final CoursePriceRepository coursePriceRepository;
     private final ReceptionCounterRepository receptionCounterRepository;
     private final MentorRepository mentorRepository;
+    private final CourseAboutPartRepository courseAboutPartRepository;
 
 
-    public ResponseEntity<ResponseData> create(String name,String description, Long forId, Long typeId, MultipartFile photo, Boolean status, HttpServletRequest request) throws IOException {
+    public ResponseEntity<ResponseData> create(String name,String description, Long forId, Long typeId, MultipartFile photo, String apIds, Boolean status, HttpServletRequest request) throws IOException {
 
         UserData userData = jwtGenerator.getUserFromRequest(request);
+        if(!jwtGenerator.isAdmin(userData)){
+            return new ResponseEntity<>(new ResponseData(false, "Ushbu resursga murojaat qilish huquqingiz yo'q", null), HttpStatus.BAD_REQUEST);
+        }
         Course course = new Course();
         course.setName(name);
         course.setDescription(description);
@@ -51,6 +54,26 @@ public class CourseService {
         imageData.setContent(photo.getBytes());
         imageData.setUser(userData);
         course.setPreviewPhoto(imageData);
+
+
+
+        if(apIds.length()==1){
+            Optional<CourseAboutPart> courseAboutPart = courseAboutPartRepository.findById(Long.parseLong(apIds));
+            if(courseAboutPart.isEmpty()){
+                return new ResponseEntity<>(new ResponseData(false, "AboutPart topilmadi", null), HttpStatus.BAD_REQUEST);
+            }
+            course.setCourseAboutParts(Collections.singleton(courseAboutPartRepository.findById(Long.parseLong(apIds)).get()));
+        }
+        else if(apIds.length()>1){
+            List<Long> aboutPartIds = Arrays.stream(apIds.split(",")).map(Long::parseLong).toList();
+            Set<CourseAboutPart> courseAboutPartSet =courseAboutPartRepository.getByInIds(aboutPartIds);
+            if(courseAboutPartSet.size()==0){
+                return new ResponseEntity<>(new ResponseData(false, "AboutPart topilmadi", null), HttpStatus.BAD_REQUEST);
+            }
+            course.setCourseAboutParts(courseAboutPartSet);
+        }
+
+
         try {
             courseRepository.save(course);
             ReceptionCounter receptionCounter = new ReceptionCounter();

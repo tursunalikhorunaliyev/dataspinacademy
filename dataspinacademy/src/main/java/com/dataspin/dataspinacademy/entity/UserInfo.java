@@ -11,12 +11,16 @@ import java.time.LocalDate;
 @Getter
 @Setter
 @Entity
-@Table(name = "user_info", uniqueConstraints = @UniqueConstraint(name = "unique_user", columnNames = {"firstname", "lastname", "middlename"}))
+@Table(name = "user_info", uniqueConstraints = @UniqueConstraint(name = "unique_user", columnNames = {"firstname", "lastname", "middlename", "primary_phone", "birthday"}))
 public class UserInfo {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
     private Long id;
+
+    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JoinColumn(name = "profile_photo", referencedColumnName = "id",unique = true)
+    private ImageData profilePhoto;
 
     @Column(nullable = false)
     private String firstname;
@@ -29,18 +33,15 @@ public class UserInfo {
 
     private LocalDate birthday;
 
-    @Column(nullable = false, unique = true)
+    @Column(name = "primary_phone",nullable = false, unique = true)
     private String primaryPhone;
 
     @Column
     private String secondaryPhone;
 
-    @Column(unique = true)
-    private String telegramUsername;
-
     @OneToOne
     @JoinColumn(name = "user", referencedColumnName = "id", unique = true)
-    private UserData userData ;
+    private UserData userData;
 
     @CreationTimestamp
     private Timestamp date;

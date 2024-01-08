@@ -45,7 +45,7 @@ public class JWTGenerator {
     public UserData getUserFromRequest(HttpServletRequest request) {
         String bearerToken = request.getHeader("Authorization");
         if (bearerToken.startsWith("Bearer ")) {
-            return userRepository.findByPhone(getUsernameFromToken(bearerToken.substring(7))).orElse(null);
+            return userRepository.findByUsername(getUsernameFromToken(bearerToken.substring(7))).orElse(null);
         } else {
             return null;
         }

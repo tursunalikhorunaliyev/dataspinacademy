@@ -7,7 +7,7 @@ spring:
     path match:
       matching-strategy: ant_path_matcher
   datasource:
-    url: jdbc:mysql://localhost:3306/dataspin224422232423
+    url: jdbc:mysql://localhost:3306/dataspin224422232423?createDatabaseIfNotExist=true
     username: dataspinacademy
     password: allohakbar13281328
 

@@ -7,7 +7,6 @@ import com.dataspin.dataspinacademy.entity.ImageData;
 import com.dataspin.dataspinacademy.entity.UserData;
 import com.dataspin.dataspinacademy.repository.AboutUsRepository;
 import com.dataspin.dataspinacademy.repository.ImageDataRepository;
-import com.dataspin.dataspinacademy.repository.ReceptionRepository;
 import com.dataspin.dataspinacademy.security.JWTGenerator;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -26,7 +25,6 @@ public class AboutUsService {
 
     private final JWTGenerator jwtGenerator;
     private final AboutUsRepository aboutUsRepository;
-    private final ReceptionRepository receptionRepository;
     private final ImageDataRepository imageDataRepository;
 
     public ResponseEntity<ResponseData> create(AboutUsDTO aboutUsDTO, HttpServletRequest request) throws IOException {
@@ -124,5 +122,25 @@ public class AboutUsService {
 
     public ResponseEntity<ResponseData> getAllInformation() {
         return ResponseEntity.ok(new ResponseData(true, "Barcha ma'lumotlar", aboutUsRepository.findAllInfo().stream().findFirst()));
+    }
+
+    public ResponseEntity<ResponseData> changeYouTubeLinks(String links){
+        List<AboutUs> aboutUses = aboutUsRepository.findAll();
+        if(aboutUses.size()==1){
+            AboutUs aboutUs = aboutUses.get(0);
+            aboutUs.setYouTubeLinks(links);
+           /* if(!aboutUs.getYouTubeLinks().isEmpty()){
+                aboutUs.setYouTubeLinks(aboutUs.getYouTubeLinks()+","+links);
+            }
+            else {
+                aboutUs.setYouTubeLinks(links);
+            }*/
+            aboutUsRepository.save(aboutUs);
+            return ResponseEntity.ok(new ResponseData(true, "Ma'lumotlar saqlandi", null));
+
+        }
+        else{
+            return new ResponseEntity<>(new ResponseData(false, "Nimadir xato ketgan", null), HttpStatus.BAD_REQUEST);
+        }
     }
 }

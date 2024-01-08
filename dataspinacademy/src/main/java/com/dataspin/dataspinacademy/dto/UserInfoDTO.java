@@ -3,6 +3,7 @@ package com.dataspin.dataspinacademy.dto;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.constraints.NotBlank;
 
@@ -20,5 +21,12 @@ public class UserInfoDTO {
     private String tel1;
     private String tel2;
 
-    private String tg;
+    private MultipartFile profilePhoto;
+
+    @NotBlank(message = "Username kiritilmadi")
+    private String username;
+
+    @NotBlank(message = "Password kiritilmadi")
+    private String password;
+
 }

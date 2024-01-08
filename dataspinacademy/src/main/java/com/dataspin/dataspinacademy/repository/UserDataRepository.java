@@ -8,6 +8,6 @@ import org.springframework.stereotype.Repository;
 import java.util.Optional;
 @Repository
 public interface UserDataRepository extends JpaRepository<UserData, Long> {
-    boolean existsByPhone(String phone);
-    Optional<UserData> findByPhone(String phone);
+    boolean existsByUsername(String username);
+    Optional<UserData> findByUsername(String phone);
 }

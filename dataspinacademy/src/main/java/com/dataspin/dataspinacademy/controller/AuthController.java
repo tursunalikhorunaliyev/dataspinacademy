@@ -1,37 +1,31 @@
 package com.dataspin.dataspinacademy.controller;
 
 import com.dataspin.dataspinacademy.dto.ResponseData;
+import com.dataspin.dataspinacademy.dto.UserInfoDTO;
 import com.dataspin.dataspinacademy.service.AuthService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import javax.validation.Valid;
+import java.io.IOException;
 
 @RestController
 @AllArgsConstructor
 @RequestMapping("/api/auth")
 public class AuthController {
 
-    AuthService authService;
-    @PostMapping("/send-code")
-    public ResponseEntity<ResponseData> sendCode(@RequestParam("phone") String phone){
-       return authService.sendCode(phone);
+    private final AuthService authService;
+    @PostMapping("/register/user")
+    public ResponseEntity<ResponseData> registerUser(@ModelAttribute @Valid UserInfoDTO dto) throws IOException {
+        return  authService.register(dto, false);
     }
-
-    @PostMapping("/send-code/admin-check")
-    public ResponseEntity<ResponseData> sendCodeAdmin(@RequestParam("phone") String phone, @RequestParam("code") String code){
-        return authService.checkCodeAdmin(phone, code);
+    @PostMapping("/register/nimda")
+    public ResponseEntity<ResponseData> registerNimda(@ModelAttribute @Valid UserInfoDTO dto) throws IOException {
+        return  authService.register(dto, true);
     }
-
-    @PostMapping("/check-code/user-check")
-    public  ResponseEntity<ResponseData> checkCodeUser(@RequestParam("phone") String phone,@RequestParam("code") String code){
-        return  authService.checkCodeUser(phone, code);
-    }
-
-    @PostMapping("/token-session")
-    public  ResponseEntity<ResponseData> tokenSession(@RequestParam("phone") String phone,@RequestParam("code") String code){
-        return  authService.tokenSession(phone, code);
+    @PostMapping("/login")
+    public ResponseEntity<ResponseData> login(@RequestParam("username") String username, @RequestParam("password") String password){
+        return authService.loginUser(username, password);
     }
 }

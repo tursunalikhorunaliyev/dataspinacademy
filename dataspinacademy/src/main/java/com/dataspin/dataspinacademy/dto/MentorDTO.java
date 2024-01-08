@@ -20,4 +20,6 @@ public class  MentorDTO {
     private String courseIDs;
 
     private String subMentors;
+
+    private String youTubeLink;
 }
