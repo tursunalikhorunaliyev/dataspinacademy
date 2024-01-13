@@ -22,4 +22,15 @@ public interface UserInfoInfo {
     String getSecondaryPhone();
 
     Timestamp getDate();
+
+    ImageDataInfo getProfilePhoto();
+
+    UserDataInfo getUserData();
+
+    /**
+     * Projection for {@link com.dataspin.dataspinacademy.entity.UserData}
+     */
+    interface UserDataInfo {
+        Long getId();
+    }
 }

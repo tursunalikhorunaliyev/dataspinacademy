@@ -32,10 +32,10 @@ public class CourseReplyController {
             return commentService.getAllDeletedCommentsByCourseAndUser(course_id, user_info_id, request);
         }
         else{
-            return commentService.getAllCommentsByCourse(course_id);
+            return commentService.getAllDeletedCommentsById(course_id, request);
         }
     }
-    @DeleteMapping("/delete")
+    @PostMapping("/delete")
     public ResponseEntity<ResponseData> deleteReply(@RequestParam("comment_id") Long comment_id){
         return commentService.deleteComment(comment_id);
     }

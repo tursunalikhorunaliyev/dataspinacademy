@@ -16,4 +16,8 @@ public class ReceptionDTO {
     private String description;
     @NotNull(message = "receptionNumber bo'sh bo'lishi mumkin emas")
     private String receptionNumber;
+
+    private Long user_id;
+
+
 }

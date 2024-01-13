@@ -29,13 +29,13 @@ public class DeletedComment {
     private String replyText;
 
     @Column(nullable = false)
-    private LocalDateTime commentedAt;
+    private String commentedAt;
 
     @CreationTimestamp
     private Timestamp deletedAt;
 
     @ManyToOne
-    @JoinColumn(name = "user_info", referencedColumnName = "id", unique = true)
+    @JoinColumn(name = "user_info", referencedColumnName = "id")
     private UserInfo userInfo;
 
 }

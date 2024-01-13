@@ -29,6 +29,6 @@ public class CourseReply {
     @CreationTimestamp
     private Timestamp date;
     @ManyToOne
-    @JoinColumn(name = "user_info", referencedColumnName = "id", unique = true)
+    @JoinColumn(name = "user_info", referencedColumnName = "id")
     private UserInfo userInfo;
 }

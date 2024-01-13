@@ -90,7 +90,7 @@ public class CourseService {
     }
 
     public ResponseEntity<ResponseData> getAll(){
-        return ResponseEntity.ok(new ResponseData(true, "Barcha kurslar", courseRepository.findAllCourses()));
+        return ResponseEntity.ok(new ResponseData(true, "Barcha kurslar", courseRepository.findAllCoursesOnlyNames()));
     }
     public ResponseEntity<ResponseData> getAllByStatus(Boolean isActive){
         return ResponseEntity.ok(new ResponseData(true, "Barcha kurslar", courseRepository.findByStatus(isActive)));

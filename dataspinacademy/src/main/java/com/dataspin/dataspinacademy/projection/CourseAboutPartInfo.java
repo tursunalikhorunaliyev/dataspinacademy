@@ -10,5 +10,5 @@ public interface CourseAboutPartInfo {
 
     String getDescription();
 
-    ImageDataInfo getPreviewPhoto();
+    ImageDataInfo getIcon();
 }

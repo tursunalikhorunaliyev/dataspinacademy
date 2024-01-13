@@ -23,7 +23,7 @@ public class CourseAboutPart {
 
     @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JoinColumn(name = "image", referencedColumnName = "id", nullable = false, unique = true)
-    private ImageData previewPhoto;
+    private ImageData icon;
 
     @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", referencedColumnName = "id", nullable = false)

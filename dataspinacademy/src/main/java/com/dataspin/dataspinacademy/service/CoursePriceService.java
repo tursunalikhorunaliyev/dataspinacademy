@@ -8,6 +8,7 @@ import com.dataspin.dataspinacademy.repository.CoursePriceRepository;
 import com.dataspin.dataspinacademy.repository.CourseRepository;
 import com.dataspin.dataspinacademy.security.JWTGenerator;
 import lombok.AllArgsConstructor;
+import org.hibernate.event.spi.SaveOrUpdateEvent;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -21,6 +22,7 @@ import java.util.List;
 @AllArgsConstructor
 public class CoursePriceService {
     private final JWTGenerator jwtGenerator;
+
     private final CourseRepository courseRepository;
     private final CoursePriceRepository coursePriceRepository;
 

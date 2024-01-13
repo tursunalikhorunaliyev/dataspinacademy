@@ -89,7 +89,7 @@ public class AuthService {
                 return new ResponseEntity<>(new ResponseData(false, "Siz oldin ro'yxatdan o'tgansiz!", null), HttpStatus.BAD_REQUEST);
             }
         }
-        return new ResponseEntity<>(new ResponseData(true, "Admin ro'yhatdan o'tdi!", null), HttpStatus.OK);
+        return new ResponseEntity<>(new ResponseData(true,  isAdmin?"Admin ro'yhatdan o'tdi!":"User ro'yxatdan o'tdi", null), HttpStatus.OK);
     }
 
 

@@ -3,6 +3,7 @@ package com.dataspin.dataspinacademy.repository;
 import com.dataspin.dataspinacademy.entity.Course;
 import com.dataspin.dataspinacademy.entity.Tag;
 import com.dataspin.dataspinacademy.projection.CourseInfo;
+import com.dataspin.dataspinacademy.projection.CourseOnlyNamesInfo;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
@@ -18,6 +19,9 @@ public interface CourseRepository extends JpaRepository<Course, Long> {
 
     @Query("SELECT c FROM Course c")
     List<CourseInfo> findAllCourses();
+
+    @Query("SELECT c FROM Course c")
+    List<CourseOnlyNamesInfo> findAllCoursesOnlyNames();
 
     List<CourseInfo> findByStatus(Boolean status);
 

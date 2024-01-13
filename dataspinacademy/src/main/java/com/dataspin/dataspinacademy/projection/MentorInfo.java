@@ -16,4 +16,6 @@ public interface MentorInfo {
     Set<CourseInfo> getCourses();
 
     Set<EmployeeInfo> getSubMentors();
+
+    String getYouTubeLinks();
 }

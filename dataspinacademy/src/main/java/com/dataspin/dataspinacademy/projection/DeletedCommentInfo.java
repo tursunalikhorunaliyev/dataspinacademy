@@ -11,7 +11,7 @@ public interface DeletedCommentInfo {
 
     String getReplyText();
 
-    LocalDateTime getCommentedAt();
+    String getCommentedAt();
 
     Timestamp getDeletedAt();
 

@@ -12,6 +12,7 @@ spring:
     password: allohakbar13281328
 
 
+
   jpa:
     database-platform: org.hibernate.dialect.MySQL8Dialect
     hibernate:

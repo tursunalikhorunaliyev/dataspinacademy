@@ -24,8 +24,8 @@ public class NewsController {
         return newsService.update(id, newsDTO, request);
     }
 
-    @DeleteMapping("/delete")
-    public ResponseEntity<ResponseData> update(@RequestParam("id") Long id, HttpServletRequest request) {
+    @PostMapping("/delete")
+    public ResponseEntity<ResponseData> delete(@RequestParam("id") Long id, HttpServletRequest request) {
         return newsService.delete(id, request);
     }
 

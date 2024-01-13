@@ -31,7 +31,7 @@ public class MentorService {
         Employee employee = employeeRepository.findById(mentorDTO.getEmployeeID()).get();
 
 
-        if (!employee.getStuff().getName().equals("O'qituvchi")) {
+        if (!employee.getStuff().getName().equals("Mentor")) {
             return new ResponseEntity<>(new ResponseData(false, "Bu hodim o'qituvchi lavozimida emas.", null), HttpStatus.BAD_REQUEST);
         }
 
@@ -54,6 +54,7 @@ public class MentorService {
         if (mentorDTO.getSubMentors() != null) {
             mentor.setSubMentors(new HashSet<>(employeeRepository.getByInIds(Arrays.stream(mentorDTO.getSubMentors().split(",")).map(Long::parseLong).toList())));
         }
+        mentor.setYouTubeLinks(mentorDTO.getYouTubeLink());
         mentor.setUser(userData);
         try {
             mentorRepository.save(mentor);
@@ -64,7 +65,7 @@ public class MentorService {
 
     }
 
-    public ResponseEntity<ResponseData> update(Long id, String courseIds, String subMentors, HttpServletRequest request) {
+    public ResponseEntity<ResponseData> update(Long id, String courseIds, String subMentors, String youtubeLinks, HttpServletRequest request) {
         UserData userData = jwtGenerator.getUserFromRequest(request);
         Optional<Mentor> oldMentor = mentorRepository.findById(id);
 
@@ -72,7 +73,7 @@ public class MentorService {
             return new ResponseEntity<>(new ResponseData(false, "Mentor topilmadi.", null), HttpStatus.BAD_REQUEST);
         }
 
-        if (!oldMentor.get().getEmployee().getStuff().getName().equals("O'qituvchi")) {
+        if (!oldMentor.get().getEmployee().getStuff().getName().equals("Mentor")) {
             return new ResponseEntity<>(new ResponseData(false, "Bu hodim o'qituvchi lavozimida emas.", null), HttpStatus.BAD_REQUEST);
         }
 
@@ -99,6 +100,7 @@ public class MentorService {
             mentor.setSubMentors(new HashSet<>(employeeRepository.getByInIds(Arrays.stream(subMentors.split(",")).map(Long::parseLong).toList())));
         }
         mentor.setUser(userData);
+        mentor.setYouTubeLinks(youtubeLinks);
         try {
             mentorRepository.save(mentor);
             return ResponseEntity.ok(new ResponseData(true, "Ma'lumotlar yangilandi", null));

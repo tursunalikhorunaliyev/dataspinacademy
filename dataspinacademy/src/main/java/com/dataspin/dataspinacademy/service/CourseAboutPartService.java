@@ -37,7 +37,7 @@ public class CourseAboutPartService {
         imageData.setContent(icon.getBytes());
         imageData.setUser(userData);
 
-        courseAboutPart.setPreviewPhoto(imageData);
+        courseAboutPart.setIcon(imageData);
         courseAboutPart.setName(title);
         courseAboutPart.setDescription(description);
         courseAboutPart.setUser(userData);

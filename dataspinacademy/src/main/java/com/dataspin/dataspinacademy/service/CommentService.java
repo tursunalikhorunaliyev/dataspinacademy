@@ -58,8 +58,7 @@ public class CommentService {
         deletedComment.setCourse(courseReply1.getCourse());
         deletedComment.setReplyText(courseReply1.getReplyText());
         deletedComment.setUserInfo(courseReply1.getUserInfo());
-        LocalDateTime localDateTime = LocalDateTime.ofInstant(Instant.ofEpochMilli(Long.parseLong(courseReply1.getDate().toString())), ZoneId.systemDefault());
-        deletedComment.setCommentedAt(localDateTime);
+        deletedComment.setCommentedAt(courseReply1.getDate().toString());
         deletedCommentRepository.save(deletedComment);
         courseReplyRepository.deleteById(commentId);
         return ResponseEntity.ok(new ResponseData(true, "Comment o'chirib yuborildi", null));

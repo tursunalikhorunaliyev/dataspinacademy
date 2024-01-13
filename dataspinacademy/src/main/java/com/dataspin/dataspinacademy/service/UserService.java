@@ -26,12 +26,11 @@ public class UserService {
     private final UserInfoRepository userInfoRepository;
     private final JWTGenerator jwtGenerator;
     private final ImageDataRepository imageDataRepository;
+    private  final  AuthService authService;
 
 
-    public ResponseEntity<ResponseData> createUser(UserInfoDTO userInfoDTO, HttpServletRequest request){
-        System.out.println(userInfoDTO.getFirstname());
-        System.out.println(userInfoDTO.getLastname());
-        System.out.println(userInfoDTO.getMiddlename());
+    public ResponseEntity<ResponseData> createUser(UserInfoDTO userInfoDTO, HttpServletRequest request) throws IOException {
+
         UserInfo userInfo = new UserInfo();
         userInfo.setFirstname(userInfoDTO.getFirstname());
         userInfo.setLastname(userInfoDTO.getLastname());
@@ -48,8 +47,15 @@ public class UserService {
         if(userInfoDTO.getTel2()!=null){
             userInfo.setSecondaryPhone(userInfoDTO.getTel2());
         }
-        userInfo.setUserData(jwtGenerator.getUserFromRequest(request));
-        System.out.println(jwtGenerator.getUserFromRequest(request).getId()+"tsttststtsttsttsttsttsttts");
+        UserData userData = jwtGenerator.getUserFromRequest(request);
+        userInfo.setUserData(userData);
+        if(userInfoDTO.getProfilePhoto()!=null){
+            ImageData imageData = new ImageData();
+            imageData.setFilename(userInfoDTO.getProfilePhoto().getOriginalFilename());
+            imageData.setContent(userInfoDTO.getProfilePhoto().getBytes());
+            imageData.setUser(userData);
+            userInfo.setProfilePhoto(imageData);
+        }
 
         try {
             userInfoRepository.save(userInfo);
@@ -85,5 +91,11 @@ public class UserService {
             imageDataRepository.delete(userInfo.getProfilePhoto());
             return ResponseEntity.ok(new ResponseData(true, "Ma'lumotlar saqlandi", null));
         }
+    }
+    public ResponseEntity<ResponseData> getAllUser(HttpServletRequest request){
+        if(!jwtGenerator.isAdmin(jwtGenerator.getUserFromRequest(request))){
+            return new ResponseEntity<>(new ResponseData(false, "Ushbu resursga murojaat qilish huquqingiz mavjud emas", null), HttpStatus.BAD_REQUEST);
+        }
+        return ResponseEntity.ok(new ResponseData(true, "Success!", userInfoRepository.findAllInfo()));
     }
 }

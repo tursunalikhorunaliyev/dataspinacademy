@@ -1,5 +1,4 @@
 package com.dataspin.dataspinacademy.service;
-
 import com.dataspin.dataspinacademy.dto.EmployeeDTO;
 import com.dataspin.dataspinacademy.dto.ResponseData;
 import com.dataspin.dataspinacademy.entity.Employee;
@@ -10,7 +9,6 @@ import com.dataspin.dataspinacademy.repository.PhysicalFaceRepository;
 import com.dataspin.dataspinacademy.repository.StuffRepository;
 import com.dataspin.dataspinacademy.security.JWTGenerator;
 import lombok.AllArgsConstructor;
-import org.apache.catalina.mbeans.UserMBean;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -50,6 +48,7 @@ public class EmployeeService {
         employee.setStartDate(startDateTime);
 
         if(employeeDTO.getEndDate() != null){
+            System.out.println(employeeDTO.getEndDate()+"nhjahsjkfhakshkahksdhkhakjhdkahkjdhaskhdkashkdhakshkahskdhkashdk");
             LocalDateTime endDateTime = LocalDateTime.parse(employeeDTO.getEndDate(), dateTimeFormatter);
             employee.setEndDate(endDateTime);
         }
@@ -66,6 +65,6 @@ public class EmployeeService {
         return ResponseEntity.ok(new ResponseData(true, "Barcha hodimlar", employeeRepository.findAllInfo()));
     }
     public ResponseEntity<ResponseData> getAllTeachers(){
-        return ResponseEntity.ok(new ResponseData(true, "Barcha hodimlar", employeeRepository.findByStuff_Name("O'qituvchi")));
+        return ResponseEntity.ok(new ResponseData(true, "Barcha hodimlar", employeeRepository.findByStuff_Name("Mentor")));
     }
 }
