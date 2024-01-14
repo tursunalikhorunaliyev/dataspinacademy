@@ -25,7 +25,7 @@ public class CoursePrice {
     @Column(nullable = false)
     private Integer price;
 
-    @Column(name = "start_date",nullable = false, unique = true)
+    @Column(name = "start_date",nullable = false)
     private LocalDate startDate;
 
 
