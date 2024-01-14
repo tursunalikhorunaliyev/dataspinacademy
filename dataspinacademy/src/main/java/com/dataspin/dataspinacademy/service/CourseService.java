@@ -84,7 +84,7 @@ public class CourseService {
             receptionCounterRepository.save(receptionCounter);
             return ResponseEntity.ok(new ResponseData(true, "Ma'lumotlar saqlandi", null));
         } catch (DataIntegrityViolationException e) {
-            return new ResponseEntity<>(new ResponseData(false, "Allaqachon mavjud", null), HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(new ResponseData(false, "Reception counter Allaqachon mavjud", null), HttpStatus.BAD_REQUEST);
         }
 
     }
