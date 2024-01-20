@@ -98,4 +98,8 @@ public class UserService {
         }
         return ResponseEntity.ok(new ResponseData(true, "Success!", userInfoRepository.findAllInfo()));
     }
+    public ResponseEntity<ResponseData> getMe(HttpServletRequest request){
+        UserData userData = jwtGenerator.getUserFromRequest(request);
+        return ResponseEntity.ok(new ResponseData(true,"Me", userInfoRepository.findByUserData_Id(userData.getId())));
+    }
 }

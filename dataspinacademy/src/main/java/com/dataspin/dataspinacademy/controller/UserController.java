@@ -25,4 +25,8 @@ public class UserController {
     public ResponseEntity<ResponseData> getAllUserInfo(HttpServletRequest request){
         return userService.getAllUser(request);
     }
+    @GetMapping("/me")
+    public ResponseEntity<ResponseData> getMe(HttpServletRequest request){
+        return userService.getMe(request);
+    }
 }

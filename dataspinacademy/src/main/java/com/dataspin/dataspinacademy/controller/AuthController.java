@@ -1,5 +1,6 @@
 package com.dataspin.dataspinacademy.controller;
 
+import com.dataspin.dataspinacademy.dto.LoginDTO;
 import com.dataspin.dataspinacademy.dto.ResponseData;
 import com.dataspin.dataspinacademy.dto.UserInfoDTO;
 import com.dataspin.dataspinacademy.service.AuthService;
@@ -25,7 +26,7 @@ public class AuthController {
         return  authService.register(dto, true);
     }
     @PostMapping("/login")
-    public ResponseEntity<ResponseData> login(@RequestParam("username") String username, @RequestParam("password") String password){
-        return authService.loginUser(username, password);
+    public ResponseEntity<ResponseData> login(@RequestBody LoginDTO loginDTO){
+        return authService.loginUser(loginDTO.getUsername(), loginDTO.getPassword());
     }
 }

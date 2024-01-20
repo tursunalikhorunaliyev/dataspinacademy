@@ -5,6 +5,7 @@ import com.dataspin.dataspinacademy.dto.TokenData;
 import com.dataspin.dataspinacademy.dto.UserInfoDTO;
 import com.dataspin.dataspinacademy.entity.*;
 import com.dataspin.dataspinacademy.repository.*;
+import com.dataspin.dataspinacademy.security.AuthExceptionEntryPoint;
 import com.dataspin.dataspinacademy.security.JWTGenerator;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -16,6 +17,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import javax.security.auth.message.AuthException;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -35,10 +37,19 @@ public class AuthService {
 
 
     public ResponseEntity<ResponseData> loginUser(String username, String password){
-        final Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(username, password));
-        SecurityContextHolder.getContext().setAuthentication(authentication);
-        final String token = jwtGenerator.generateToken(authentication);
-        return new ResponseEntity<>(new ResponseData(true, "Foydalanuvchi tizimga kirdi", token), HttpStatus.OK);
+
+            final Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(username, password));
+            if(authentication.isAuthenticated()){
+                SecurityContextHolder.getContext().setAuthentication(authentication);
+                final String token = jwtGenerator.generateToken(authentication);
+                return new ResponseEntity<>(new ResponseData(true, "Foydalanuvchi tizimga kirdi", token), HttpStatus.OK);
+            }
+            else{
+                return new ResponseEntity<>(new ResponseData(false, "Foydalanuvchi tizimga kira olmadi", null), HttpStatus.UNAUTHORIZED);
+            }
+
+        
+
     }
     public ResponseEntity<ResponseData> register(UserInfoDTO dto, boolean isAdmin) throws IOException {
         if (userDataRepository.existsByUsername(dto.getUsername())) {
