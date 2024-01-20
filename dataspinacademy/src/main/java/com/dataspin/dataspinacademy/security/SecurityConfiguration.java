@@ -38,7 +38,6 @@ public class SecurityConfiguration {
                         "/login","/favicon.ico","/*.js","/*.js.map").permitAll()
                 .antMatchers("/api/auth/**").permitAll()
                 .antMatchers("/api/image/**").permitAll()
-                .antMatchers("/api/image/**").permitAll()
                 .antMatchers("/actuator/**").permitAll()
                 .antMatchers("/api/org/create").permitAll()
                 .antMatchers(AUTH_WHITELIST).permitAll()

@@ -42,7 +42,7 @@ public class ImageDataService {
     }
     public ResponseEntity<ResponseData> getAll(HttpServletRequest request){
         if(jwtGenerator.isAdmin(jwtGenerator.getUserFromRequest(request))){
-            List<String> getAllInfo = imageDataRepository.getAllImages().stream().map(e->"http://dataspinacademy.uz/image?id="+e.getId()).toList();
+            List<String> getAllInfo = imageDataRepository.getAllImages().stream().map(e->"http://dataspinacademy.uz/api/image?id="+e.getId()).toList();
 
             return ResponseEntity.ok(new ResponseData(true, "Images", getAllInfo));
         }
