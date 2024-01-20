@@ -54,6 +54,9 @@ public class MentorService {
         if (mentorDTO.getSubMentors() != null) {
             mentor.setSubMentors(new HashSet<>(employeeRepository.getByInIds(Arrays.stream(mentorDTO.getSubMentors().split(",")).map(Long::parseLong).toList())));
         }
+        else{
+            mentor.setSubMentors(null);
+        }
         mentor.setYouTubeLinks(mentorDTO.getYouTubeLink());
         mentor.setUser(userData);
         try {
