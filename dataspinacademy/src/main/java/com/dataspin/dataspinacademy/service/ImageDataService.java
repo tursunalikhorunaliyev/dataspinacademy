@@ -60,6 +60,7 @@ public class ImageDataService {
             imageData.setFilename(photo.getOriginalFilename());
             imageData.setContent(photo.getBytes());
             imageData.setUser(userData);
+            imageDataRepository.save(imageData);
 
 
             return ResponseEntity.ok(new ResponseData(true, "Images", "Saqlandi"));

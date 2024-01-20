@@ -2,8 +2,6 @@ package com.dataspin.dataspinacademy.controller;
 
 
 import com.dataspin.dataspinacademy.dto.ResponseData;
-import com.dataspin.dataspinacademy.entity.UserData;
-import com.dataspin.dataspinacademy.security.JWTGenerator;
 import com.dataspin.dataspinacademy.service.ImageDataService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
