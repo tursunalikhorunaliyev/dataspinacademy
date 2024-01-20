@@ -2,6 +2,7 @@ package com.dataspin.dataspinacademy.service;
 
 import com.dataspin.dataspinacademy.dto.ResponseData;
 import com.dataspin.dataspinacademy.entity.ImageData;
+import com.dataspin.dataspinacademy.projection.ImageDataInfo;
 import com.dataspin.dataspinacademy.repository.ImageDataRepository;
 import com.dataspin.dataspinacademy.security.JWTGenerator;
 import lombok.AllArgsConstructor;
@@ -13,6 +14,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.Base64Utils;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @AllArgsConstructor
@@ -39,7 +42,9 @@ public class ImageDataService {
     }
     public ResponseEntity<ResponseData> getAll(HttpServletRequest request){
         if(jwtGenerator.isAdmin(jwtGenerator.getUserFromRequest(request))){
-            return ResponseEntity.ok(new ResponseData(true, "Images", imageDataRepository.getAllImages()));
+            List<String> getAllInfo = imageDataRepository.getAllImages().stream().map(e->"http://dataspinacademy.uz/image?id="+e.getId()).toList();
+
+            return ResponseEntity.ok(new ResponseData(true, "Images", getAllInfo));
         }
         else{
             return new ResponseEntity<>(new ResponseData(false, "Siz admin emassiz", null), HttpStatus.BAD_REQUEST);
