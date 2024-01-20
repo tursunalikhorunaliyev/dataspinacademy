@@ -7,6 +7,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
@@ -28,5 +29,9 @@ public class EmployeeController {
     @GetMapping("/teachers")
     public ResponseEntity<ResponseData> getAllTeachers(){
         return employeeService.getAllTeachers();
+    }
+    @PostMapping("/update-profile-photo")
+    public ResponseEntity<ResponseData> updateProfilePhoto(@RequestParam("employee_id") Long employeeId, @RequestParam("photo")MultipartFile photo, HttpServletRequest request) throws IOException {
+        return employeeService.updateEmployeeImage(employeeId, photo, request);
     }
 }
