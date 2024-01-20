@@ -5,6 +5,7 @@ import com.dataspin.dataspinacademy.entity.Employee;
 import com.dataspin.dataspinacademy.entity.ImageData;
 import com.dataspin.dataspinacademy.entity.UserData;
 import com.dataspin.dataspinacademy.repository.EmployeeRepository;
+import com.dataspin.dataspinacademy.repository.ImageDataRepository;
 import com.dataspin.dataspinacademy.repository.PhysicalFaceRepository;
 import com.dataspin.dataspinacademy.repository.StuffRepository;
 import com.dataspin.dataspinacademy.security.JWTGenerator;
@@ -28,6 +29,7 @@ public class EmployeeService {
     private final PhysicalFaceRepository physicalFaceRepository;
     private final StuffRepository stuffRepository;
     private final JWTGenerator jwtGenerator;
+    private final ImageDataRepository imageDataRepository;
 
 
     public ResponseEntity<ResponseData> create(EmployeeDTO employeeDTO, HttpServletRequest request) throws IOException {
@@ -68,17 +70,28 @@ public class EmployeeService {
     public ResponseEntity<ResponseData> getAllTeachers(){
         return ResponseEntity.ok(new ResponseData(true, "Barcha hodimlar", employeeRepository.findByStuff_Name("Mentor")));
     }
-    public ResponseEntity<ResponseData> updateEmployeeImage(Long employeeId ,MultipartFile photo, HttpServletRequest request) throws IOException {
+    public ResponseEntity<ResponseData> updateEmployeeImage(Long employeeId, Long imageId ,MultipartFile photo, HttpServletRequest request) throws IOException {
         UserData userData = jwtGenerator.getUserFromRequest(request);
         if(jwtGenerator.isAdmin(userData)){
             if(employeeRepository.existsById(employeeId)){
-                ImageData imageData = new ImageData();
-                imageData.setFilename(photo.getOriginalFilename());
-                imageData.setContent(photo.getBytes());
-                imageData.setUser(userData);
                 Employee employee = employeeRepository.findById(employeeId).get();
-                employee.setPhoto(imageData);
-                employeeRepository.save(employee);
+                if(imageId!=null && photo==null){
+                    ImageData imageData = imageDataRepository.findById(imageId).get();
+                    employee.setPhoto(imageData);
+                    employeeRepository.save(employee);
+                }
+                else if(imageId==null && photo !=null){
+                    ImageData imageData = new ImageData();
+                    imageData.setFilename(photo.getOriginalFilename());
+                    imageData.setContent(photo.getBytes());
+                    imageData.setUser(userData);
+                    employee.setPhoto(imageData);
+                    employeeRepository.save(employee);
+                }
+                else{
+                    return new ResponseEntity<>(new ResponseData(false, "Nimadir xato", null), HttpStatus.BAD_REQUEST);
+                }
+
                 return ResponseEntity.ok(new ResponseData(true, "Barcha ma'lumotlar saqlandi", null));
             }
             else{
