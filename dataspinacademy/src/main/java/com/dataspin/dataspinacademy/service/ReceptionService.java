@@ -17,6 +17,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 @Service
@@ -29,11 +30,13 @@ public class ReceptionService {
     private final UserInfoRepository userInfoRepository;
     private final ReceptionCounterRepository receptionCounterRepository;
     private final UserDataRepository userDataRepository;
+    private final PromocodeRepository promocodeRepository;
 
     public ResponseEntity<ResponseData> create(ReceptionDTO receptionDTO, HttpServletRequest request){
         Reception reception = new Reception();
+        UserData userData;
         if(receptionDTO.getUser_id()!=null){
-          UserData userData =  userDataRepository.findById(receptionDTO.getUser_id()).orElse(null);
+          userData = userDataRepository.findById(receptionDTO.getUser_id()).orElse(null);
 
           if(userData==null){
               return new ResponseEntity<>(new ResponseData(false, "User topilmadi", null), HttpStatus.BAD_REQUEST);
@@ -48,7 +51,7 @@ public class ReceptionService {
           }
         }
         else{
-            UserData userData = jwtGenerator.getUserFromRequest(request);
+            userData = jwtGenerator.getUserFromRequest(request);
             Optional<UserInfo> userInfo = userInfoRepository.findByUserData(userData);
             if(userInfo.isEmpty()){
                 return new ResponseEntity<>(new ResponseData(false, "Siz ro'yxatdan o'tmagansiz", null), HttpStatus.BAD_REQUEST);
@@ -63,10 +66,41 @@ public class ReceptionService {
         reception.setCourseFor(course.getCourseFor());
         reception.setCourseType(course.getCourseType());
         reception.setCoursePhoto(course.getPreviewPhoto());
-        receptionRepository.save(reception);
+
         ReceptionCounter receptionCounter = receptionCounterRepository.findByCourse_Id(receptionDTO.getCourseID());
-        receptionCounter.setActiveCount(receptionCounter.getActiveCount()+1);
+        receptionCounter.setTotalCount(receptionCounter.getTotalCount()+1);
         receptionCounterRepository.save(receptionCounter);
+        if(receptionDTO.getPromo_code()!=null){
+            Optional<Promocode> promocode = promocodeRepository.findByPromoCode(receptionDTO.getPromo_code());
+            if(promocode.isEmpty()){
+                return new ResponseEntity<>(new ResponseData(false, "Bunday PROMOKOD mavjud emas", null), HttpStatus.BAD_REQUEST);
+            }
+            Promocode existsPromocode = promocode.get();
+
+            if(Objects.equals(existsPromocode.getUserInfo().getUserData().getId(), userData.getId())){
+                return new ResponseEntity<>(new ResponseData(false, "O'zingiz yaratgan promokodga o'zingiz ulana olmaysiz", null), HttpStatus.BAD_REQUEST);
+            }
+            if(!existsPromocode.getStatus()){
+                return new ResponseEntity<>(new ResponseData(false, "Promokod aktiv emas", null), HttpStatus.BAD_REQUEST);
+            }
+            if(receptionRepository.existsByPromoCodeAndUserInfo(receptionDTO.getPromo_code(), userInfoRepository.findByUserData(userData).get())){
+                return new ResponseEntity<>(new ResponseData(false, "Oldin ushbu promokoddan foydalangansiz", null), HttpStatus.BAD_REQUEST);
+            }
+            existsPromocode.setTotalCount(existsPromocode.getTotalCount()+1);
+            existsPromocode.getSubscribedUsers().add(userInfoRepository.findByUserData(userData).orElse(null));
+
+
+            reception.setPromoCode(receptionDTO.getPromo_code());
+            receptionRepository.save(reception);
+            promocodeRepository.save(existsPromocode);
+
+
+        }
+        else{
+            receptionRepository.save(reception);
+        }
+
+
         return ResponseEntity.ok(new ResponseData(true, "Ro'yxatdan o'tganligingiz uchun tashakkur. Operator javobini kuting", null));
 
     }

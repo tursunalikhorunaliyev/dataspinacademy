@@ -36,6 +36,7 @@ public class Reception {
     private ImageData coursePhoto;
 
     private String description;
+    private String promoCode;
 
     @CreationTimestamp
     private Timestamp date;

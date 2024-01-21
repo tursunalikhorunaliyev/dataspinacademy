@@ -2,6 +2,7 @@ package com.dataspin.dataspinacademy.repository;
 
 import com.dataspin.dataspinacademy.entity.Reception;
 import com.dataspin.dataspinacademy.entity.UserData;
+import com.dataspin.dataspinacademy.entity.UserInfo;
 import com.dataspin.dataspinacademy.projection.CourseTypeInfo;
 import com.dataspin.dataspinacademy.projection.ReceptionInfo;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -25,6 +26,8 @@ public interface ReceptionRepository extends JpaRepository<Reception, Long> {
     List<ReceptionInfo> findByDateBetween(Timestamp dateStart, Timestamp dateEnd);
 
     List<ReceptionInfo> findByCourseName(String courseName);
+
+    boolean existsByPromoCodeAndUserInfo(String promoCode, UserInfo userInfo);
 
 
 
