@@ -1,6 +1,7 @@
 package com.dataspin.dataspinacademy.service;
 
 import com.dataspin.dataspinacademy.dto.ResponseData;
+import com.dataspin.dataspinacademy.dto.UpdateProfileDTO;
 import com.dataspin.dataspinacademy.dto.UserInfoDTO;
 import com.dataspin.dataspinacademy.entity.ImageData;
 import com.dataspin.dataspinacademy.entity.UserData;
@@ -102,4 +103,45 @@ public class UserService {
         UserData userData = jwtGenerator.getUserFromRequest(request);
         return ResponseEntity.ok(new ResponseData(true,"Me", userInfoRepository.findByUserData_Id(userData.getId())));
     }
+    //rasm
+    //tugilgan kun
+    //tel1
+    //tel2
+    public ResponseEntity<ResponseData> updateProfile(UpdateProfileDTO dto, HttpServletRequest request) throws IOException {
+        UserData userData = jwtGenerator.getUserFromRequest(request);
+        UserInfo userInfo = userInfoRepository.findByUserData(userData).get();
+        if(dto.getPhoto()!=null){
+            if(userInfo.getProfilePhoto()==null){
+                ImageData imageData = new ImageData();
+                imageData.setFilename(dto.getPhoto().getOriginalFilename());
+                imageData.setContent(dto.getPhoto().getBytes());
+                imageData.setUser(userData);
+                userInfo.setProfilePhoto(imageData);
+
+            }
+            else{
+                ImageData imageData = new ImageData();
+                imageData.setFilename(dto.getPhoto().getOriginalFilename());
+                imageData.setContent(dto.getPhoto().getBytes());
+                imageData.setUser(userData);
+                userInfo.setProfilePhoto(imageData);
+                imageDataRepository.delete(userInfo.getProfilePhoto());
+            }
+        }
+        if(dto.getBirthday()!=null){
+            final DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
+            LocalDate localDate = LocalDate.parse(dto.getBirthday(), dateTimeFormatter);
+            userInfo.setBirthday(localDate);
+        }
+        if(dto.getTel1()!=null){
+            userInfo.setPrimaryPhone(dto.getTel1());
+        }
+        if(dto.getTel2()!=null){
+            userInfo.setSecondaryPhone(dto.getTel2());
+        }
+        userInfoRepository.save(userInfo);
+        return ResponseEntity.ok(new ResponseData(true, "Ma'lumotlar o'zgartirildi", null));
+
+    }
+
 }
