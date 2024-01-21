@@ -26,7 +26,7 @@ public class AuthController {
         return  authService.register(dto, true);
     }
     @PostMapping("/login")
-    public ResponseEntity<ResponseData> login(@RequestBody LoginDTO loginDTO){
-        return authService.loginUser(loginDTO.getUsername(), loginDTO.getPassword());
+    public ResponseEntity<ResponseData> login(@RequestParam("username") String username, @RequestParam("password")  String password){
+        return authService.loginUser(username, password);
     }
 }
