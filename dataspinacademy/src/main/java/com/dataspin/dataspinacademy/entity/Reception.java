@@ -21,7 +21,7 @@ public class Reception {
     private String receptionNumber;
 
 
-    @Column(nullable = false)
+    @Column(nullable = true)
     private String courseName;
 
     @ManyToOne
