@@ -34,4 +34,5 @@ public class EmployeeController {
     public ResponseEntity<ResponseData> updateProfilePhoto(@RequestParam("employee_id") Long employeeId, @RequestParam(value = "photo_id", required = false) Long photoId,  @RequestParam(value = "photo", required = false)MultipartFile photo, HttpServletRequest request) throws IOException {
         return employeeService.updateEmployeeImage(employeeId, photoId, photo,  request);
     }
+
 }

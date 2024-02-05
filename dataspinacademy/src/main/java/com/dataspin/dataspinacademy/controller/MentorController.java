@@ -7,9 +7,11 @@ import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.lang.Nullable;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
+import java.io.IOException;
 
 @RestController
 @RequestMapping("api/mentors")
@@ -31,5 +33,11 @@ public class MentorController {
     public ResponseEntity<ResponseData> getAll() {
         return mentorService.getAll();
     }
+
+    @PostMapping("/upload-cv")
+    public ResponseEntity<ResponseData> uploadCV(@RequestParam("cv") MultipartFile cv, @RequestParam("mentor") Long mentorID, HttpServletRequest request) throws IOException {
+       return mentorService.uploadCV(cv, mentorID, request);
+    }
+
 
 }

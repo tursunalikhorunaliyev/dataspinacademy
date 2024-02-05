@@ -22,7 +22,7 @@ public class News {
     @Column(nullable = false)
     private String shortDesc;
 
-    @Column(nullable = false)
+    @Column(nullable = false, length = 5000)
     private String fullDesc;
 
     @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)

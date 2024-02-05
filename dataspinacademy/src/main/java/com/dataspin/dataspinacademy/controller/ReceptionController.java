@@ -1,7 +1,6 @@
 package com.dataspin.dataspinacademy.controller;
 
 import com.dataspin.dataspinacademy.dto.ReceptionDTO;
-import com.dataspin.dataspinacademy.dto.ReceptionFilterDTO;
 import com.dataspin.dataspinacademy.dto.ResponseData;
 import com.dataspin.dataspinacademy.service.ReceptionService;
 import lombok.AllArgsConstructor;

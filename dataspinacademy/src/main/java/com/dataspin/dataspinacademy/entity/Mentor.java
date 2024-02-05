@@ -1,5 +1,6 @@
 package com.dataspin.dataspinacademy.entity;
 
+import lombok.Cleanup;
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
@@ -22,6 +23,11 @@ public class Mentor {
     @JoinColumn(name = "employee", referencedColumnName = "id", nullable = false, unique = true)
     private Employee employee;
 
+    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JoinColumn(name = "cv", referencedColumnName = "id")
+    private ImageData cv;
+
+
     @ManyToMany
     @JoinTable(name = "mentor_courses", joinColumns = @JoinColumn(name = "mentor_id", referencedColumnName = "id"), inverseJoinColumns = @JoinColumn(name = "course_id", referencedColumnName = "id"))
     private Set<Course> courses;
@@ -29,6 +35,8 @@ public class Mentor {
     @ManyToMany
     @JoinTable(name = "sub_mentors", joinColumns = @JoinColumn(name = "mentor_id", referencedColumnName = "id"), inverseJoinColumns = @JoinColumn(name = "employee_id", referencedColumnName = "id"))
     private Set<Employee> subMentors;
+
+
 
 
     private String youTubeLinks;

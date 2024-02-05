@@ -7,6 +7,7 @@ import java.util.Set;
  * Projection for {@link com.dataspin.dataspinacademy.entity.Mentor}
  */
 public interface MentorInfo {
+
     Long getId();
 
     Timestamp getDate();
@@ -18,4 +19,5 @@ public interface MentorInfo {
     Set<EmployeeInfo> getSubMentors();
 
     String getYouTubeLinks();
+    ImageDataInfo getCv();
 }

@@ -3,6 +3,7 @@ import com.dataspin.dataspinacademy.dto.ReceptionDTO;
 import com.dataspin.dataspinacademy.dto.ReceptionFilterDTO;
 import com.dataspin.dataspinacademy.dto.ResponseData;
 import com.dataspin.dataspinacademy.entity.*;
+import com.dataspin.dataspinacademy.projection.MentorInfo;
 import com.dataspin.dataspinacademy.projection.ReceptionInfo;
 import com.dataspin.dataspinacademy.repository.*;
 import com.dataspin.dataspinacademy.security.JWTGenerator;
@@ -31,6 +32,8 @@ public class ReceptionService {
     private final ReceptionCounterRepository receptionCounterRepository;
     private final UserDataRepository userDataRepository;
     private final PromocodeRepository promocodeRepository;
+    private final MentorRepository mentorRepository;
+    private final EmployeeRepository employeeRepository;
 
     public ResponseEntity<ResponseData> create(ReceptionDTO receptionDTO, HttpServletRequest request){
         Reception reception = new Reception();
@@ -60,12 +63,14 @@ public class ReceptionService {
             reception.setUser(userData);
         }
         Course course = courseRepository.findById(receptionDTO.getCourseID()).get();
+        reception.setEmployee(mentorRepository.findByCourses_Id(course.getId()).get(0).getEmployee());
         reception.setReceptionNumber(receptionDTO.getReceptionNumber());
         reception.setCourseName(course.getName());
         reception.setDescription(receptionDTO.getDescription());
         reception.setCourseFor(course.getCourseFor());
         reception.setCourseType(course.getCourseType());
         reception.setCoursePhoto(course.getPreviewPhoto());
+
 
         ReceptionCounter receptionCounter = receptionCounterRepository.findByCourse_Id(receptionDTO.getCourseID());
         receptionCounter.setTotalCount(receptionCounter.getTotalCount()+1);
@@ -107,6 +112,7 @@ public class ReceptionService {
     public ResponseEntity<ResponseData> getAllByUser(HttpServletRequest request){
         UserData userData = jwtGenerator.getUserFromRequest(request);
         List<ReceptionInfo> allReceptions = receptionRepository.findByUserInfo_UserData(userData);
+
         return ResponseEntity.ok(new ResponseData(true, "Barcha yozilgan kurslaringiz", allReceptions));
     }
     public ResponseEntity<ResponseData> getAllByAdmin(String courseName, String startDate, String endDate, HttpServletRequest request) throws ParseException {

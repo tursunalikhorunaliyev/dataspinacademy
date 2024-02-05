@@ -42,6 +42,10 @@ public class Reception {
     private Timestamp date;
 
     @ManyToOne
+    @JoinColumn(name = "mentor", referencedColumnName = "id", nullable = false)
+    private Employee employee;
+
+    @ManyToOne
     @JoinColumn(name = "user_info", referencedColumnName = "id", nullable = false)
     private UserInfo userInfo;
 

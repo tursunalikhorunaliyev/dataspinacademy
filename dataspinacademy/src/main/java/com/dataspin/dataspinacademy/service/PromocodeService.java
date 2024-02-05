@@ -101,7 +101,12 @@ public class PromocodeService {
 
             @Override
             public ImageDataInfo getProfilePhoto() {
-                return null;
+                return new ImageDataInfo() {
+                    @Override
+                    public Long getId() {
+                        return e.getProfilePhoto().getId();
+                    }
+                };
             }
 
             @Override

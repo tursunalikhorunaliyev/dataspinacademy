@@ -18,11 +18,11 @@ public class Promocode {
     @Column(name = "id", nullable = false)
     private Long id;
 
-    @OneToOne
-    @JoinColumn(name = "user", referencedColumnName = "id", unique = true)
+    @ManyToOne
+    @JoinColumn(name = "user", referencedColumnName = "id")
     private UserInfo userInfo;
 
-    @Column(nullable = false, unique = true)
+    @Column(nullable = false, unique = true, length = 7)
     private String promoCode;
 
     @Column(nullable = false)

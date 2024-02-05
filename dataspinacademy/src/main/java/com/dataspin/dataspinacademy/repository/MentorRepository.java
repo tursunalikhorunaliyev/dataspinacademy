@@ -12,6 +12,8 @@ import java.util.List;
 
 @Repository
 public interface MentorRepository extends JpaRepository<Mentor, Long> {
+    List<Mentor> findByCourses_Id(Long id);
+
     @Query("SELECT m FROM Mentor m")
     List<MentorInfo> findAllMentor();
 

@@ -37,7 +37,7 @@ public class ImageDataService {
             final String filename = image.getFilename();
             String ext = filename.substring(filename.lastIndexOf("."));
             //headers.add("Content-Disposition", "inline;filename=" + filename);
-            headers.setContentType((ext.contains("png")) ? MediaType.IMAGE_PNG : MediaType.IMAGE_JPEG);
+            headers.setContentType((ext.contains("png")) ? MediaType.IMAGE_PNG : (ext.contains("pdf"))? MediaType.APPLICATION_PDF: MediaType.IMAGE_JPEG);
             return ResponseEntity.ok().headers(headers).body(image.getContent());
         } else {
             return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);

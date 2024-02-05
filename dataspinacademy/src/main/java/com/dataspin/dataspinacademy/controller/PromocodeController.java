@@ -32,7 +32,7 @@ public class PromocodeController {
         return service.getUserPromocodeSubscribers(id, request);
     }
     @PostMapping("/status")
-    public ResponseEntity<ResponseData> changeStatsu(@RequestParam("id") Long id){
+    public ResponseEntity<ResponseData> changeStatus(@RequestParam("id") Long id){
         return service.changeStatus(id);
 
     }

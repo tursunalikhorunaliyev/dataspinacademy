@@ -5,7 +5,7 @@ import java.sql.Timestamp;
 /**
  * Projection for {@link com.dataspin.dataspinacademy.entity.Reception}
  */
-public interface    ReceptionInfo {
+public interface ReceptionInfo {
     Long getId();
 
     String getReceptionNumber();
@@ -21,4 +21,5 @@ public interface    ReceptionInfo {
     CourseTypeInfo getCourseType();
 
     UserInfoInfo getUserInfo();
+    EmployeeInfo getEmployee();
 }

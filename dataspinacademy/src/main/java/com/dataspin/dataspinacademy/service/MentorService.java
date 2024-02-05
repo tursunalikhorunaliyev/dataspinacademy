@@ -12,8 +12,10 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
+import java.io.IOException;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -115,5 +117,21 @@ public class MentorService {
 
     public ResponseEntity<ResponseData> getAll() {
         return ResponseEntity.ok(new ResponseData(true, "Barcha mentorlar", mentorRepository.findAllMentor()));
+    }
+    public ResponseEntity<ResponseData> uploadCV(MultipartFile cv, Long mentorId, HttpServletRequest request) throws IOException {
+        UserData userData = jwtGenerator.getUserFromRequest(request);
+        if(jwtGenerator.isAdmin(userData)){
+            Mentor mentor = mentorRepository.findById(mentorId).get();
+            ImageData imageData = new ImageData();
+            imageData.setFilename(cv.getOriginalFilename());
+            imageData.setContent(cv.getBytes());
+            imageData.setUser(userData);
+            mentor.setCv(imageData);
+            mentorRepository.save(mentor);
+            return ResponseEntity.ok(new ResponseData(true, "Saqlandi", null));
+        }
+        else{
+            return new ResponseEntity<>(new ResponseData(false, "Allaqachon mavjud", null), HttpStatus.BAD_REQUEST);
+        }
     }
 }

@@ -22,5 +22,5 @@ public interface EmployeeInfo {
 
     ImageDataInfo getPhoto();
 
-    String getAbout();
+    String getSpeciality();
 }
