@@ -99,7 +99,6 @@ public class ReceptionService {
             receptionRepository.save(reception);
             promocodeRepository.save(existsPromocode);
 
-
         }
         else{
             receptionRepository.save(reception);

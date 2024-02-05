@@ -20,6 +20,7 @@ import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.Collections;
 
 @Service
 @AllArgsConstructor
@@ -87,6 +88,7 @@ public class EmployeeService {
                     imageData.setUser(userData);
                     employee.setPhoto(imageData);
                     employeeRepository.save(employee);
+                    imageDataRepository.deleteByIds(Collections.singletonList(employee.getPhoto().getId()));
                 }
                 else{
                     return new ResponseEntity<>(new ResponseData(false, "Nimadir xato", null), HttpStatus.BAD_REQUEST);
