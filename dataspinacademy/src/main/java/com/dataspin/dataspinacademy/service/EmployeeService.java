@@ -88,7 +88,7 @@ public class EmployeeService {
                     imageData.setUser(userData);
                     employee.setPhoto(imageData);
                     employeeRepository.save(employee);
-                    imageDataRepository.deleteByIds(Collections.singletonList(employee.getPhoto().getId()));
+                    //imageDataRepository.deleteByIds(Collections.singletonList(employee.getPhoto().getId()));
                 }
                 else{
                     return new ResponseEntity<>(new ResponseData(false, "Nimadir xato", null), HttpStatus.BAD_REQUEST);
