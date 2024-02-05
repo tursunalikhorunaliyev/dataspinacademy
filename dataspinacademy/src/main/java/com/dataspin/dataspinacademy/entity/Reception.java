@@ -21,7 +21,7 @@ public class Reception {
     private String receptionNumber;
 
 
-    @Column(nullable = true)
+    @Column(nullable = false)
     private String courseName;
 
     @ManyToOne
@@ -42,7 +42,7 @@ public class Reception {
     private Timestamp date;
 
     @ManyToOne
-    @JoinColumn(name = "mentor", referencedColumnName = "id", nullable = false)
+    @JoinColumn(name = "mentor", referencedColumnName = "id")
     private Employee employee;
 
     @ManyToOne
